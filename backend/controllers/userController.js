@@ -41,8 +41,6 @@ const createUser = async (req, res) => {
   }
 };
 
-
-
 const loginUser = async (req, res) => {
   try {
     // Extract email and password from the request body
@@ -81,7 +79,64 @@ const loginUser = async (req, res) => {
   }
 };
 
+const updateUser = async (req, res) => {
+  try {
+    // Extract user ID from the request parameters or body
+    const userId = req.params.id || req.body.id;
+
+    // Check if user ID is provided
+    if (!userId) {
+      return res
+        .status(400)
+        .send({ status: false, msg: "User ID is required" });
+    }
+
+    // Extract the fields to be updated from the request body
+    const updatedFields = {
+      name: req.body.name,
+      phone_number: req.body.phone_number,
+      gender: req.body.gender,
+      email_id: req.body.email_id,
+      // Add more fields as needed
+    };
+
+    // Filter out undefined values to avoid setting them to null in the update
+    const filteredFields = Object.fromEntries(
+      Object.entries(updatedFields).filter(
+        ([key, value]) => value !== undefined
+      )
+    );
+
+    // Update the user document in the user_collection
+    const updatedUser = await userModel.findByIdAndUpdate(
+      userId,
+      { $set: filteredFields },
+      { new: true } // Return the updated document
+    );
+
+    // Check if the user was found and updated
+    if (!updatedUser) {
+      return res.status(404).send({ status: false, msg: "User not found" });
+    }
+
+    // Return a success response with the updated user data
+    return res.status(200).send({
+      status: true,
+      msg: "User updated successfully",
+      data: updatedUser,
+    });
+  } catch (err) {
+    // Handle any errors that occur during the process
+    console.error(err);
+
+    // Return an error response
+    return res.status(500).send({ status: false, msg: "Error updating user" });
+  }
+};
+
+// Export the functions for use in other modules
 module.exports = {
   createUser,
   loginUser,
+  updateUser,
 };
