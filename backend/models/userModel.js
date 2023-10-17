@@ -10,6 +10,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     trim: true,
     required: true,
+    unique: true,
   },
   gender: {
     type: String,
@@ -20,11 +21,13 @@ const userSchema = new mongoose.Schema({
     type: String,
     trim: true,
     required: true,
+    unique: true,
   },
   password: {
     type: String,
     trim: true,
     required: true,
+    unique: true,
   },
   profile_pic: {
     type: String,
@@ -33,4 +36,4 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("user_collection" ,userSchema);
+module.exports = mongoose.model("user_collection", userSchema);
