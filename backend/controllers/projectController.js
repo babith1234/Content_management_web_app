@@ -61,7 +61,8 @@ const createProject = async (req, res) => {
 
 const getProjects = async (req, res) => {
   try {
-    const userId = req.params.id;//
+    // const userId = req.params.user;
+    const userId = req.query.user;
 
     const userProjects = await projectModel.find({ user: userId });
 
@@ -83,13 +84,14 @@ const getProjects = async (req, res) => {
 
 const deleteProject = async (req, res) => {
   try {
-    const userId = req.params.user_id;
-    const projectId = req.params.project_id;
+    
+    // const projectId = req.params.project_id;
+    const projectId = req.query.id;
 
     // Check if the project exists and is associated with the user
     const projectToDelete = await projectModel.findOne({
       _id: projectId,
-      user: userId,
+      
     });
 
     if (!projectToDelete) {
@@ -117,10 +119,10 @@ const deleteProject = async (req, res) => {
 // UPDATE A PROJECT
 const updateProject = async (req, res) => {
   try {
-    const { user_id, project_id } = req.params;
+    const project_id = req.query.id;
     const projectDataToUpdate = req.body;
 
-    if(!(user_id || project_id)){
+    if(!(project_id)){
       return res.status(400).json({
         status:false,
         msg:"No userId or projectId provided"
@@ -158,4 +160,22 @@ const updateProject = async (req, res) => {
 };
 
 
-module.exports = {createProject, authenticateMiddleware, getProjects, deleteProject, updateProject};
+
+const getAllProjects = async (req, res) => {
+  try {
+   
+    const projects = await projectModel.find();
+
+    return res.status(200).send({
+      status: true,
+      msg: 'All projects retrieved successfully',
+      data: projects,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send({ msg: 'Internal server error', status: false });
+  }
+};
+
+
+module.exports = {createProject, authenticateMiddleware, getProjects, deleteProject, updateProject, getAllProjects,};

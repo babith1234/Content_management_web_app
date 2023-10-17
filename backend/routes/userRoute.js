@@ -9,11 +9,10 @@ router.put("/users/:id",userController.updateUser)
 router.post("/login",userController.loginUser)
 
 router.post("/projects", authenticateMiddleware, projectController.createProject);
-router.get("/projects/:id",projectController.getProjects)
-router.delete("/projects/:user_id/:project_id",projectController.deleteProject)
-router.put("/projects/:user_id/:project_id",projectController.updateProject)
-
-
+router.get("/projects",projectController.getProjects)
+router.get("/projects/all",projectController.getAllProjects)
+router.delete("/projects",projectController.deleteProject)
+router.put("/projects",projectController.updateProject)
 
 
 
