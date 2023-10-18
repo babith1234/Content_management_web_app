@@ -5,6 +5,7 @@ const {authenticateMiddleware} = require("../controllers/projectController")
 const contactController = require("../controllers/conactController")
 const feedController = require("../controllers/feedController")
 const servicesController = require("../controllers/servicesController")
+const testimonialController = require("../controllers/testimonialController")
 const router=express.Router()
 
 // REGISTRATION, LOGIN, LOGOUT ROUTE
@@ -36,6 +37,17 @@ router.post('/services', authenticateMiddleware, servicesController.createServic
 router.get('/services', servicesController.getServices);
 router.delete('/services', servicesController.deleteService);
 router.put('/services', servicesController.updateService)
+
+
+router.post('/services', authenticateMiddleware, servicesController.createService);
+router.get('/services', servicesController.getServices);
+router.delete('/services', servicesController.deleteService);
+router.put('/services', servicesController.updateService)
+
+router.post('/testimonial',testimonialController.createTestimonial );
+router.get('/testimonial', testimonialController.getAllTestimonials);
+router.delete('/testimonial', testimonialController.deleteTestimonial);
+router.put('/testimonial', testimonialController.updateTestimonial)
 
 
 module.exports=router

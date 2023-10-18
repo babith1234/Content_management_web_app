@@ -1,24 +1,72 @@
 const projectModel = require("../models/projectModel");
 const jwt = require("jsonwebtoken");
-const jwtSecret = "MynameIsBabithPoojary";
 
 // authenticateMiddleware.js
 
 const authenticateMiddleware = (req, res, next) => {
   try {
-    const token = req.headers.authorization;
-    console.log(token);
-    const Tokens = token.split(" ");
-    const actualToken = Tokens[1];
+    const authorizationHeader = req.headers.authorization;
 
-    const decodedToken = jwt.verify(actualToken, jwtSecret);
-    console.log(decodedToken);
+    if (!authorizationHeader) {
+      return res
+        .status(401)
+        .send({ msg: "Authorization header missing", status: false });
+    }
 
-    req.user = decodedToken;
-    next();
+    const tokens = authorizationHeader.split(" ");
+    const tokenType = tokens[0];
+    const accessToken = tokens[1];
+
+    if (tokenType === "Bearer") {
+      // Verify the access token
+      jwt.verify(accessToken, process.env.JWT_SECRET_KEY, (err, decoded) => {
+        if (err) {
+          // If access token is invalid or expired, try using the refresh token
+          if (err.name === "TokenExpiredError") {
+            return tryRefreshToken(req.cookies.refreshToken, res, next);
+          }
+          return res
+            .status(401)
+            .json({ msg: "Invalid access token", status: false });
+        }
+
+        // Attach the user data to the request object
+        req.user = decoded;
+        next();
+      });
+    } else {
+      return res.status(401).send({ msg: "Invalid token type", status: false });
+    }
   } catch (error) {
-    return res.status(401).send({ msg: "Invalid token", status: false });
+    return res
+      .status(500)
+      .send({ msg: "Internal server error", status: false });
   }
+};
+
+const tryRefreshToken = (refreshToken, res, next) => {
+  // Verify the refresh token
+  jwt.verify(refreshToken, process.env.JWT_REFRESH_KEY, (err, decoded) => {
+    if (err) {
+      return res
+        .status(401)
+        .json({ msg: "Invalid refresh token", status: false });
+    }
+
+    // Generate a new access token
+    const newAccessToken = jwt.sign(
+      {
+        user_id: decoded.user_id,
+        // Add any other relevant data from the decoded refresh token
+      },
+      process.env.JWT_SECRET_KEY,
+      { expiresIn: "10m" }
+    );
+
+    // Attach the new access token to the request object
+    req.user = { ...decoded, newAccessToken };
+    next();
+  });
 };
 
 // CREATE A PROJECT CONTROLLER
@@ -55,8 +103,6 @@ const createProject = async (req, res) => {
   }
 };
 
-
-
 //DISPLAY ALL THE PROJECTS OF LOGGED IN USER
 
 const getProjects = async (req, res) => {
@@ -79,19 +125,16 @@ const getProjects = async (req, res) => {
   }
 };
 
-
 //DELETE A PROJECT
 
 const deleteProject = async (req, res) => {
   try {
-    
     // const projectId = req.params.project_id;
     const projectId = req.query.id;
 
     // Check if the project exists and is associated with the user
     const projectToDelete = await projectModel.findOne({
       _id: projectId,
-      
     });
 
     if (!projectToDelete) {
@@ -122,11 +165,11 @@ const updateProject = async (req, res) => {
     const project_id = req.query.id;
     const projectDataToUpdate = req.body;
 
-    if(!(project_id)){
+    if (!project_id) {
       return res.status(400).json({
-        status:false,
-        msg:"No userId or projectId provided"
-      })
+        status: false,
+        msg: "No userId or projectId provided",
+      });
     }
 
     // Construct an update object with only provided fields
@@ -155,27 +198,34 @@ const updateProject = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ status: false, msg: "Internal server error" });
+    return res
+      .status(500)
+      .json({ status: false, msg: "Internal server error" });
   }
 };
 
-
-
 const getAllProjects = async (req, res) => {
   try {
-   
     const projects = await projectModel.find();
 
     return res.status(200).send({
       status: true,
-      msg: 'All projects retrieved successfully',
+      msg: "All projects retrieved successfully",
       data: projects,
     });
   } catch (error) {
     console.error(error);
-    return res.status(500).send({ msg: 'Internal server error', status: false });
+    return res
+      .status(500)
+      .send({ msg: "Internal server error", status: false });
   }
 };
 
-
-module.exports = {createProject, authenticateMiddleware, getProjects, deleteProject, updateProject, getAllProjects,};
+module.exports = {
+  createProject,
+  authenticateMiddleware,
+  getProjects,
+  deleteProject,
+  updateProject,
+  getAllProjects,
+};
