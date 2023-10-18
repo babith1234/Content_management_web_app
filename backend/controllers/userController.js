@@ -3,6 +3,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const jwtSecret = "MynameIsBabithPoojary";
 
+
 //                         CREATE USER CONTROLLER
 // Controller function to create a new user and insert data into the user_collection
 const createUser = async (req, res) => {
@@ -83,14 +84,21 @@ const loginUser = async (req, res) => {
         .status(400)
         .json({ msg: "Try logging with correct credentials", status: false });
     }
-
+  
     // If email and password are valid, create a JWT token
     const payload = {
       user_id: userData.id,
       exp: Math.floor(Date.now() / 1000) + 3600, // Set expiration time to 1 hour from now
     };
 
-    const authToken = jwt.sign(payload, jwtSecret); // Sign the JWT with a secret key
+    let authToken = jwt.sign(payload, jwtSecret); // Sign the JWT with a secret key
+    console.log(authToken)
+
+    // Set the JWT token as a cookie
+    res.cookie("authToken", authToken, {
+      httpOnly: true,
+      maxAge: 3600000, // 1 hour in milliseconds
+    });
 
     // Return a JSON response with success status and the JWT token
     return res.json({ success: true, authToken: authToken });
@@ -103,14 +111,14 @@ const loginUser = async (req, res) => {
   }
 };
 
-
 //                      UPDATE USER CONTROLLER
 const updateUser = async (req, res) => {
   try {
     // Extract user ID from the request parameters or body
     const userId = req.params.id || req.body.id;
 
-    const { name, phone_number, gender, email_id, password, profile_pic } = req.body;
+    const { name, phone_number, gender, email_id, password, profile_pic } =
+      req.body;
 
     // Check if user ID is provided
     if (!userId) {
@@ -163,9 +171,38 @@ const updateUser = async (req, res) => {
   }
 };
 
+
+//              LOGOUT USER
+
+// Sample token blacklist implementation using an array
+const blacklistedTokens = [];
+
+const logoutController = (req, res) => {
+  try {
+    // Clear the JWT cookie on the client-side
+    res.clearCookie("authToken");
+
+    // Retrieve the token from the request
+    const token = req.cookies.authToken;
+   
+
+    // Add the token to the server-side blacklist (for illustration purposes)
+    blacklistedTokens.push(token);
+
+    return res.status(200).json({ status: true, msg: "Logout successful" });
+  } catch (error) {
+    console.error("Error during logout:", error);
+    return res
+      .status(500)
+      .json({ msg: "Internal Server Error", status: false });
+  }
+};
+
 // Export the functions for use in other modules
 module.exports = {
   createUser,
   loginUser,
   updateUser,
+  logoutController,
+  blacklistedTokens,
 };
