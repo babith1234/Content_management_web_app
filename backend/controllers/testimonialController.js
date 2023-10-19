@@ -3,33 +3,25 @@ const testimonialModel = require("../models/testimonialModel");
 // CREATE A TESTIMONIAL CONTROLLER
 const createTestimonial = async (req, res) => {
   try {
-    const { client_image, client_name, client_company, client_description,created_on } =
-      req.body;
+    testimonialData = req.body;
 
     // Validate required fields
-    if (
-      !client_image ||
-      !client_name ||
-      !client_company ||
-      !client_description ||
-      !created_on
-    ) {
-      return res.status(400).json({
-        status: false,
-        msg: "All fields are required",
-      });
+    if (Object.keys(testimonialData).length === 0) {
+      return res.status(400).send({ status: false, msg: "no data provided" });
     }
-
+    // Check if the object has been successfully uploaded
+    if (!req.file) {
+      return res
+        .status(400)
+        .send({ status: false, msg: "No project image provided" });
+    }
     // Assuming req.user contains user information from authentication middleware
     // const userId = req.user.user_id;
 
     // Create a new testimonial document and save it to the testimonials collection
     const newTestimonial = await testimonialModel.create({
-      client_image,
-      client_name,
-      client_company,
-      client_description,
-      created_on
+      ...testimonialData,
+      client_image: req.file.location,
     });
 
     return res.status(201).json({
@@ -108,7 +100,7 @@ const updateTestimonial = async (req, res) => {
       });
     }
 
-    // Construct an update object with only provided fields
+    // Construct and update object with only provided fields
     const updateObject = {};
     for (const key in testimonialDataToUpdate) {
       if (testimonialDataToUpdate[key] !== undefined) {
@@ -124,7 +116,9 @@ const updateTestimonial = async (req, res) => {
     );
 
     if (!updatedTestimonial) {
-      return res.status(404).json({ status: false, msg: "Testimonial not found" });
+      return res
+        .status(404)
+        .json({ status: false, msg: "Testimonial not found" });
     }
 
     return res.status(200).json({
@@ -140,6 +134,9 @@ const updateTestimonial = async (req, res) => {
   }
 };
 
-
-
-module.exports = { createTestimonial, getAllTestimonials, deleteTestimonial,updateTestimonial };
+module.exports = {
+  createTestimonial,
+  getAllTestimonials,
+  deleteTestimonial,
+  updateTestimonial,
+};

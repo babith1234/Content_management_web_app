@@ -10,17 +10,15 @@ const createService = async (req, res) => {
       return res.status(400).send({ status: false, msg: "No data provided" });
     }
 
-    if (Object.keys(serviceData).length < 3) {
-      return res
-        .status(400)
-        .send({ status: false, msg: "Insufficient data provided" });
+     // Check if the object has been successfully uploaded
+     if (!req.file) {
+      return res.status(400).send({ status: false, msg: "No project image provided" });
     }
-
-    // Assuming you have user data in the request
 
     const saveService = await servicesModel.create({
       ...serviceData,
       user: userId,
+      service_image: req.file.location,
     });
 
     return res.status(201).send({

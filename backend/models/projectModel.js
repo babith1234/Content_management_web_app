@@ -1,6 +1,4 @@
 const mongoose = require("mongoose");
-
-
 const projectSchema = new mongoose.Schema({
   project_image: {
     type: String,
@@ -24,7 +22,7 @@ const projectSchema = new mongoose.Schema({
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'user_collection', 
+    ref: 'users', 
   },
 });
 

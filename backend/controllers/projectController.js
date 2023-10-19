@@ -1,5 +1,6 @@
 const projectModel = require("../models/projectModel");
 const jwt = require("jsonwebtoken");
+const aws = require("aws-sdk");
 
 // authenticateMiddleware.js
 
@@ -73,7 +74,10 @@ const tryRefreshToken = (refreshToken, res, next) => {
 
 const createProject = async (req, res) => {
   try {
+    console.log(req.file.location);
     let projectData = req.body;
+    console.log(projectData);
+    console.log(projectData.project_image);
 
     const userId = req.user.user_id;
     console.log(userId);
@@ -81,16 +85,15 @@ const createProject = async (req, res) => {
     if (Object.keys(projectData).length === 0) {
       return res.status(400).send({ status: false, msg: "no data provided" });
     }
-
-    if (Object.keys(projectData).length < 5) {
-      return res
-        .status(400)
-        .send({ status: false, msg: "insufficient data provided" });
+     // Check if the object has been successfully uploaded
+     if (!req.file) {
+      return res.status(400).send({ status: false, msg: "No project image provided" });
     }
 
     let saveProject = await projectModel.create({
       ...projectData,
       user: userId,
+      project_image: req.file.location,
     });
     return res.status(201).send({
       status: true,

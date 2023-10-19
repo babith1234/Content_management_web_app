@@ -1,49 +1,68 @@
 const userModel = require("../models/userModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const aws = require("aws-sdk");
 
 //                         CREATE USER CONTROLLER
 // Controller function to create a new user and insert data into the user_collection
 const createUser = async (req, res) => {
-  // Generate a salt for password hashing
-  const salt = await bcrypt.genSalt(10);
-
-  // Hash the password using the generated salt
-  let hashedPassword = await bcrypt.hash(req.body.password, salt);
-
   try {
+    // Generate a salt for password hashing
+    const salt = await bcrypt.genSalt(10);
+    // console.log(req.body.password)
+    const { password } = req.body;
+
+    // Hash the password using the generated salt
+    const hashedPassword = await bcrypt.hash(password, salt);
+
     // Extract user data from the request body
-    let data = req.body;
+    const data = req.body;
 
     // Check if any data is provided in the request
     if (Object.keys(data).length === 0) {
       return res.status(400).send({ status: false, msg: "no data provided" });
     }
 
-    const email_id = data.email_id;
-    // checking if the email id already exists
-    const User = await userModel.findOne({ email_id });
+    // Check if the object has been successfully uploaded
+    if (!req.file) {
+      return res
+        .status(400)
+        .send({ status: false, msg: "No project image provided" });
+    }
 
-    if (User) {
+    const email_id = data.email_id;
+
+    // Check if the email id already exists
+    const existingUser = await userModel.findOne({ email_id });
+
+    if (existingUser) {
       return res.status(400).json({
-        success: "false",
-        msg: "User already exists register with other email id",
+        success: false,
+        msg: "User already exists, please register with another email id",
       });
     }
 
-    const userData = userModel.create({ ...data, password: hashedPassword });
+    // Create a new user with the hashed password and profile_pic
+    const newUser = await userModel.create({
+      ...data,
+      password: hashedPassword,
+      profile_pic: req.file.location,
+    });
 
     // Return a success response if data insertion is successful
-    return res
-      .status(201)
-      .send({ status: true, msg: "data insert success", data: data });
+    return res.status(201).json({
+      status: true,
+      msg: "User registered successfully",
+      data: newUser,
+    });
   } catch (err) {
     // Handle any errors that occur during the process
-
     console.error(err);
 
     // Return an error response
-    return res.status(500).send({ msg: "Internal server error", staus: false });
+    return res
+      .status(500)
+      .json({ msg: "Internal server error", status: false });
   }
 };
 

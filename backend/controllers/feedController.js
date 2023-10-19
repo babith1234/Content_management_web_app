@@ -15,15 +15,17 @@ const createFeeds = async (req, res) => {
       return res.status(400).send({ status: false, msg: "no data provided" });
     }
 
-    if (Object.keys(feedsData).length < 3) {
+    // Check if the object has been successfully uploaded
+    if (!req.file) {
       return res
         .status(400)
-        .send({ status: false, msg: "insufficient data provided" });
+        .send({ status: false, msg: "No project image provided" });
     }
 
     let saveFeeds = await feedModel.create({
       ...feedsData,
       user: userId,
+      image: req.file.location,
     });
     return res.status(201).send({
       status: true,
@@ -95,11 +97,11 @@ const updateFeed = async (req, res) => {
     const feed_id = req.query.id;
     const feedDataToUpdate = req.body;
 
-    if(!(feed_id)){
+    if (!feed_id) {
       return res.status(400).json({
-        status:false,
-        msg:"No userId or feedId provided"
-      })
+        status: false,
+        msg: "No userId or feedId provided",
+      });
     }
 
     // Construct an update object with only provided fields
@@ -128,9 +130,10 @@ const updateFeed = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ status: false, msg: "Internal server error" });
+    return res
+      .status(500)
+      .json({ status: false, msg: "Internal server error" });
   }
 };
-
 
 module.exports = { createFeeds, getFeeds, deleteFeed, updateFeed };
