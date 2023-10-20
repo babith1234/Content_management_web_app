@@ -1,4 +1,6 @@
 const servicesModel = require("../models/servicesModel");
+const multerConfig = require("../middleware/multer");
+const { generatePublicPresignedUrl } = require("../middleware/multer");
 
 // CREATE A SERVICE CONTROLLER
 const createService = async (req, res) => {
@@ -10,15 +12,20 @@ const createService = async (req, res) => {
       return res.status(400).send({ status: false, msg: "No data provided" });
     }
 
-     // Check if the object has been successfully uploaded
-     if (!req.file) {
-      return res.status(400).send({ status: false, msg: "No project image provided" });
+    // Check if the image has been successfully uploaded
+    if (!req.file) {
+      return res
+        .status(400)
+        .send({ status: false, msg: "No project image provided" });
     }
+
+    // Generate a pre-signed URL for public access with a 12-hour expiration
+    const preSignedUrl = generatePublicPresignedUrl(req.file.key);
 
     const saveService = await servicesModel.create({
       ...serviceData,
       user: userId,
-      service_image: req.file.location,
+      service_image: preSignedUrl,
     });
 
     return res.status(201).send({
@@ -34,7 +41,7 @@ const createService = async (req, res) => {
   }
 };
 
-// DISPLAY ALL THE SERVICES
+// DISPLAY LOGGED IN USER'S SERVICES
 const getServices = async (req, res) => {
   try {
     const userId = req.query.user; // Assuming you have user data in the request
@@ -70,8 +77,13 @@ const deleteService = async (req, res) => {
         .json({ status: false, msg: "Service not found for the user" });
     }
 
-    // Deleting the service
+    // Get the image key associated with the project
+    const imageKey = serviceToDelete.service_image;
+
     await servicesModel.findByIdAndDelete(serviceId);
+
+    // Delete the image from the S3 bucket
+    await deleteImageFromS3(imageKey);
 
     return res.status(200).json({
       status: true,
@@ -85,6 +97,24 @@ const deleteService = async (req, res) => {
       .json({ msg: "Internal server error", status: false });
   }
 };
+// Function to delete an image from the S3 bucket
+const deleteImageFromS3 = (imageKey) => {
+  const params = {
+    Bucket: process.env.WASABI_BUCKET,
+    Key: imageKey,
+  };
+
+  return new Promise((resolve, reject) => {
+    s3.deleteObject(params, (err, data) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(data);
+      }
+    });
+  });
+};
+
 
 // UPDATE A SERVICE
 const updateService = async (req, res) => {
@@ -107,7 +137,6 @@ const updateService = async (req, res) => {
       }
     }
 
-    // Assuming servicesModel has an update method
     const updatedService = await servicesModel.findByIdAndUpdate(
       service_id,
       updateObject,
@@ -128,6 +157,31 @@ const updateService = async (req, res) => {
     return res
       .status(500)
       .json({ status: false, msg: "Internal server error" });
+  }
+};
+
+//DISPLAY ALL THE SERVICES IN THE SERVICES MODEL
+
+const displayServices = async (req, res) => {
+  try {
+    const serviceData = await servicesModel.find();
+
+    if (!serviceData) {
+      return res.status(400).json({
+        status: false,
+        msg: "No services found",
+        data: serviceData,
+      });
+    }
+    return res.status(200).json({
+      status: true,
+      msg: "Services retrieved successfully",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      status: false,
+      msg: "Internal serever error",
+    });
   }
 };
 

@@ -1,6 +1,6 @@
 const feedModel = require("../models/feedModel");
-const jwt = require("jsonwebtoken");
-const jwtSecret = "MynameIsBabithPoojary";
+const multerConfig = require("../middleware/multer");
+const { generatePublicPresignedUrl } = require("../middleware/multer");
 
 // CREATE A FEEDS CONTROLLER
 
@@ -9,7 +9,6 @@ const createFeeds = async (req, res) => {
     let feedsData = req.body;
 
     const userId = req.user.user_id;
-    console.log(userId);
 
     if (Object.keys(feedsData).length === 0) {
       return res.status(400).send({ status: false, msg: "no data provided" });
@@ -22,10 +21,12 @@ const createFeeds = async (req, res) => {
         .send({ status: false, msg: "No project image provided" });
     }
 
+    const preSignedUrl = generatePublicPresignedUrl(req.file.key);
+
     let saveFeeds = await feedModel.create({
       ...feedsData,
       user: userId,
-      image: req.file.location,
+      image: preSignedUrl,
     });
     return res.status(201).send({
       status: true,
@@ -59,7 +60,7 @@ const getFeeds = async (req, res) => {
   }
 };
 
-//DELETE A PROJECT
+//DELETE A FEED
 
 const deleteFeed = async (req, res) => {
   try {
@@ -76,7 +77,13 @@ const deleteFeed = async (req, res) => {
         .json({ status: false, msg: "feed not found for the user" });
     }
 
+    // Get the image key associated with the project
+    const imageKey = feedToDelete.image;
+
     await feedModel.findByIdAndDelete(feedId);
+
+    // Delete the image from the S3 bucket
+    await deleteImageFromS3(imageKey);
 
     return res.status(200).json({
       status: true,
@@ -91,7 +98,26 @@ const deleteFeed = async (req, res) => {
   }
 };
 
-// UPDATE A PROJECT
+// Function to delete an image from the S3 bucket
+const deleteImageFromS3 = (imageKey) => {
+  const params = {
+    Bucket: process.env.WASABI_BUCKET,
+    Key: imageKey,
+  };
+
+  return new Promise((resolve, reject) => {
+    s3.deleteObject(params, (err, data) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(data);
+      }
+    });
+  });
+};
+
+
+// UPDATE A FEED
 const updateFeed = async (req, res) => {
   try {
     const feed_id = req.query.id;
@@ -136,4 +162,30 @@ const updateFeed = async (req, res) => {
   }
 };
 
-module.exports = { createFeeds, getFeeds, deleteFeed, updateFeed };
+// DISPLAY ALL THE FEEDS IN FEED MODEL
+
+const displayFeed = async (req, res) => {
+  try {
+    const feedData = await feedModel.find();
+
+    if (!feedData) {
+      return res.status(404).json({
+        status: false,
+        msg: "No feed found",
+      });
+    }
+
+    return res.status(200).json({
+      status: true,
+      msg: "Feeds retrieved successfully",
+      data: feedData,
+    });
+  } catch (error) {
+    return res.staus(500).json({
+      status: false,
+      msg: "Internal server error",
+    });
+  }
+};
+
+module.exports = { createFeeds, getFeeds, deleteFeed, updateFeed, displayFeed };

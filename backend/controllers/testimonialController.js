@@ -1,4 +1,6 @@
 const testimonialModel = require("../models/testimonialModel");
+const multerConfig = require("../middleware/multer");
+const { generatePublicPresignedUrl } = require("../middleware/multer");
 
 // CREATE A TESTIMONIAL CONTROLLER
 const createTestimonial = async (req, res) => {
@@ -9,19 +11,22 @@ const createTestimonial = async (req, res) => {
     if (Object.keys(testimonialData).length === 0) {
       return res.status(400).send({ status: false, msg: "no data provided" });
     }
-    // Check if the object has been successfully uploaded
+    // Check if the Image has been successfully uploaded
     if (!req.file) {
       return res
         .status(400)
-        .send({ status: false, msg: "No project image provided" });
+        .send({ status: false, msg: "No testimonial image provided" });
     }
     // Assuming req.user contains user information from authentication middleware
     // const userId = req.user.user_id;
 
+    // Generate a pre-signed URL for public access with a 12-hour expiration
+    const preSignedUrl = generatePublicPresignedUrl(req.file.key);
+
     // Create a new testimonial document and save it to the testimonials collection
     const newTestimonial = await testimonialModel.create({
       ...testimonialData,
-      client_image: req.file.location,
+      client_image: preSignedUrl,
     });
 
     return res.status(201).json({
@@ -72,7 +77,12 @@ const deleteTestimonial = async (req, res) => {
         .json({ status: false, msg: "testimonial not found for the user" });
     }
 
+    // Get the image key associated with the project
+    const imageKey = testimonialToDelete.client_image;
+
     await testimonialModel.findByIdAndDelete(testimonialId);
+
+    await deleteImageFromS3(imageKey);
 
     return res.status(200).json({
       status: true,
@@ -87,7 +97,25 @@ const deleteTestimonial = async (req, res) => {
   }
 };
 
-// UPDATE A PROJECT
+// Function to delete an image from the S3 bucket
+const deleteImageFromS3 = (imageKey) => {
+  const params = {
+    Bucket: process.env.WASABI_BUCKET,
+    Key: imageKey,
+  };
+
+  return new Promise((resolve, reject) => {
+    s3.deleteObject(params, (err, data) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(data);
+      }
+    });
+  });
+};
+
+// UPDATE A TESTIMONIAL
 const updateTestimonial = async (req, res) => {
   try {
     const testimonial_id = req.query.id;
