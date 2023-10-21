@@ -7,6 +7,8 @@ const createTestimonial = async (req, res) => {
   try {
     testimonialData = req.body;
 
+    const userId = req.user.user_id;
+
     // Validate required fields
     if (Object.keys(testimonialData).length === 0) {
       return res.status(400).send({ status: false, msg: "no data provided" });
@@ -26,6 +28,7 @@ const createTestimonial = async (req, res) => {
     // Create a new testimonial document and save it to the testimonials collection
     const newTestimonial = await testimonialModel.create({
       ...testimonialData,
+      user: userId,
       client_image: preSignedUrl,
     });
 

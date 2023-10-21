@@ -43,8 +43,33 @@ const createService = async (req, res) => {
 
 // DISPLAY LOGGED IN USER'S SERVICES
 const getServices = async (req, res) => {
+  
   try {
-    const userId = req.query.user; // Assuming you have user data in the request
+    
+    const userId = req.query.user; 
+    if(!userId){
+      try {
+        const serviceData = await servicesModel.find();
+    
+        if (!serviceData) {
+          return res.status(400).json({
+            status: false,
+            msg: "No services found",
+            
+          });
+        }
+        return res.status(200).json({
+          status: true,
+          msg: "Services retrieved successfully",
+          data: serviceData,
+        });
+      } catch (error) {
+        return res.status(500).json({
+          status: false,
+          msg: "Internal serever error",
+        });
+      }
+    }
 
     const userServices = await servicesModel.find({ user: userId });
 
@@ -60,6 +85,7 @@ const getServices = async (req, res) => {
       .json({ msg: "Internal server error", status: false });
   }
 };
+
 
 // DELETE A SERVICE
 const deleteService = async (req, res) => {
@@ -180,34 +206,10 @@ const updateService = async (req, res) => {
 
 //DISPLAY ALL THE SERVICES IN THE SERVICES MODEL
 
-const displayServices = async (req, res) => {
-  try {
-    const serviceData = await servicesModel.find();
-
-    if (!serviceData) {
-      return res.status(400).json({
-        status: false,
-        msg: "No services found",
-        
-      });
-    }
-    return res.status(200).json({
-      status: true,
-      msg: "Services retrieved successfully",
-      data: serviceData,
-    });
-  } catch (error) {
-    return res.status(500).json({
-      status: false,
-      msg: "Internal serever error",
-    });
-  }
-};
-
 module.exports = {
   createService,
   getServices,
   deleteService,
   updateService,
-  displayServices
+ 
 };

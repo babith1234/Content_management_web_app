@@ -11,11 +11,6 @@ const feedSchema = new mongoose.Schema({
     trim: true,
     required: true,
   },
-  created_by:{
-    type:String,
-    trim:true,
-    required:true
-  },
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'users', 

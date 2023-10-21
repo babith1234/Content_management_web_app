@@ -19,7 +19,6 @@ router.post("/logout",userController.logoutController)
 // PROJECT CREATION, DISPLAY, DELETE, UPDATE ROUTE
 router.post("/projects", authenticateMiddleware,upload.single('project_image'), projectController.createProject);
 router.get("/projects",projectController.getProjects)
-router.get("/projects/all",projectController.getAllProjects)
 router.delete("/projects",projectController.deleteProject)
 router.put("/projects",upload.single('project_image'),projectController.updateProject)
 
@@ -32,8 +31,6 @@ router.post("/feeds",authenticateMiddleware,upload.single('image'),feedControlle
 router.get("/feeds",feedController.getFeeds)
 router.delete("/feeds",feedController.deleteFeed)
 router.put("/feeds",upload.single('image'),feedController.updateFeed)
-router.get("/feeds/all",feedController.displayFeed)
-
 
 
 // SERVICES CREATION, DISPLAY, DELETE, UPDATE ROUTE
@@ -41,11 +38,11 @@ router.post('/services', authenticateMiddleware,upload.single('service_image'), 
 router.get('/services', servicesController.getServices);
 router.delete('/services', servicesController.deleteService);
 router.put('/services', servicesController.updateService)
-router.get("/services/all",upload.single('service_image'),servicesController.displayServices)
+
 
 
 // TESTIMONIALS CREATION, DISPLAY, DELETE, UPDATE ROUTE
-router.post('/testimonial',upload.single('client_image'),testimonialController.createTestimonial );
+router.post('/testimonial',authenticateMiddleware,upload.single('client_image'),testimonialController.createTestimonial );
 router.get('/testimonial', testimonialController.getAllTestimonials);
 router.delete('/testimonial', testimonialController.deleteTestimonial);
 router.put('/testimonial',upload.single('client_image'), testimonialController.updateTestimonial)

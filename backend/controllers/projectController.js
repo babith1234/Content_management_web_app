@@ -120,7 +120,25 @@ const createProject = async (req, res) => {
 const getProjects = async (req, res) => {
   try {
     // const userId = req.params.user;
-    const userId = req.query.user;
+    
+    const userId = req.query.id;
+    if(!userId){
+      try {
+
+        const projects = await projectModel.find();
+    
+        return res.status(200).send({
+          status: true,
+          msg: "All projects retrieved successfully",
+          data: projects,
+        });
+      } catch (error) {
+        console.error(error);
+        return res
+          .status(500)
+          .send({ msg: "Internal server error", status: false });
+      }
+    }
 
     const userProjects = await projectModel.find({ user: userId });
 
@@ -267,31 +285,11 @@ const updateProject = async (req, res) => {
   }
 };
 
-
-// DISPLAY ALL THE PROJECTS IN THE PROJECTS MODEL 
-const getAllProjects = async (req, res) => {
-  try {
-    
-    const projects = await projectModel.find();
-
-    return res.status(200).send({
-      status: true,
-      msg: "All projects retrieved successfully",
-      data: projects,
-    });
-  } catch (error) {
-    console.error(error);
-    return res
-      .status(500)
-      .send({ msg: "Internal server error", status: false });
-  }
-};
-
 module.exports = {
   createProject,
   authenticateMiddleware,
   getProjects,
   deleteProject,
   updateProject,
-  getAllProjects,
+ 
 };

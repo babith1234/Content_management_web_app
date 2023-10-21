@@ -43,7 +43,31 @@ const createFeeds = async (req, res) => {
 
 const getFeeds = async (req, res) => {
   try {
-    const userId = req.query.user;
+    
+    const userId = req.query.id;
+    if(!userId){
+      try {
+        const feedData = await feedModel.find();
+    
+        if (!feedData) {
+          return res.status(404).json({
+            status: false,
+            msg: "No feed found",
+          });
+        }
+    
+        return res.status(200).json({
+          status: true,
+          msg: "Feeds retrieved successfully",
+          data: feedData,
+        });
+      } catch (error) {
+        return res.staus(500).json({
+          status: false,
+          msg: "Internal server error",
+        });
+      }
+    }
 
     const userFeeds = await feedModel.find({ user: userId });
 
@@ -181,28 +205,6 @@ const updateFeed = async (req, res) => {
 
 // DISPLAY ALL THE FEEDS IN FEED MODEL
 
-const displayFeed = async (req, res) => {
-  try {
-    const feedData = await feedModel.find();
 
-    if (!feedData) {
-      return res.status(404).json({
-        status: false,
-        msg: "No feed found",
-      });
-    }
 
-    return res.status(200).json({
-      status: true,
-      msg: "Feeds retrieved successfully",
-      data: feedData,
-    });
-  } catch (error) {
-    return res.staus(500).json({
-      status: false,
-      msg: "Internal server error",
-    });
-  }
-};
-
-module.exports = { createFeeds, getFeeds, deleteFeed, updateFeed, displayFeed };
+module.exports = { createFeeds, getFeeds, deleteFeed, updateFeed };

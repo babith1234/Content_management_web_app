@@ -19,8 +19,13 @@ const testimonialSchema = new mongoose.Schema({
   },
   created_on: {
     type: String,
-    required:true
+    required:true,
   },
-});
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'users',
+}
+})
+
 
 module.exports = mongoose.model("testimonials", testimonialSchema);
