@@ -34,6 +34,9 @@ const userSchema = new mongoose.Schema({
     trim: true,
     required: true,
   },
+},
+{
+  timestamps:true,
 });
 
 module.exports = mongoose.model("users", userSchema);

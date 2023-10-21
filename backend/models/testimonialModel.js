@@ -17,10 +17,6 @@ const testimonialSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  created_on: {
-    type: String,
-    required:true,
-  },
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'users',
