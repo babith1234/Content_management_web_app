@@ -2,6 +2,10 @@ const userModel = require("../models/userModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const aws = require("aws-sdk");
+const multerConfig = require('../middleware/multer');
+const {generatePublicPresignedUrl} = require('../middleware/multer');
+// Access the 's3' object
+const s3 = multerConfig.s3;
 
 //                         CREATE USER CONTROLLER
 // Controller function to create a new user and insert data into the user_collection
@@ -22,6 +26,16 @@ const createUser = async (req, res) => {
     if (Object.keys(data).length === 0) {
       return res.status(400).send({ status: false, msg: "no data provided" });
     }
+
+    // Check if the image has been successfully uploaded
+    if (!req.file) {
+      return res
+        .status(400)
+        .send({ status: false, msg: "No project image provided" });
+    }
+
+    // Generate a pre-signed URL for public access with a 12-hour expiration
+    const preSignedUrl = generatePublicPresignedUrl(req.file.key);
 
     // Check if the object has been successfully uploaded
     if (!req.file) {
@@ -46,7 +60,7 @@ const createUser = async (req, res) => {
     const newUser = await userModel.create({
       ...data,
       password: hashedPassword,
-      profile_pic: req.file.location,
+      profile_pic: preSignedUrl,
     });
 
     // Return a success response if data insertion is successful
@@ -112,12 +126,6 @@ const loginUser = async (req, res) => {
       process.env.JWT_REFRESH_KEY
     );
 
-    // // Set the JWT tokens as cookies
-    // res.cookie("authToken", accessToken, {
-    //   httpOnly: true,
-    //   maxAge: 3600000, // 1 hour in milliseconds
-    // });
-
     // Set the JWT refresh token as an HTTP-only cookie (secure and SameSite settings included)
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
@@ -141,10 +149,10 @@ const loginUser = async (req, res) => {
 const updateUser = async (req, res) => {
   try {
     // Extract user ID from the request parameters or body
-    const userId = req.params.id || req.body.id;
+    const userId = req.query.id
 
-    const { name, phone_number, gender, email_id, password, profile_pic } =
-      req.body;
+    const userData = req.body;
+    const newImageFile = req.file;
 
     // Check if user ID is provided
     if (!userId) {
@@ -155,14 +163,27 @@ const updateUser = async (req, res) => {
 
     // Extract the fields to be updated from the request body
     const updatedFields = {
-      name,
-      phone_number,
-      gender,
-      email_id,
-      password,
-      profile_pic,
+      ...userData,
     };
+    if (newImageFile) {
+      // Retrieve the existing image key from the database
+      const existingUser = await userModel.findById(userId);
+      const existingImageKey = existingUser.profile_pic;
 
+      // Delete the old image from S3
+      await s3
+        .deleteObject({
+          Bucket: process.env.WASABI_BUCKET,
+          Key: existingImageKey,
+        })
+        .promise();
+
+      // Generate a pre-signed URL for the new image
+      const newImageURL = generatePublicPresignedUrl(newImageFile.key);
+
+      // Update the project data to include the new image URL
+      userData.profile_pic = newImageURL;
+    }
     // Filter out undefined values to avoid setting them to null in the update
     const filteredFields = Object.fromEntries(
       Object.entries(updatedFields).filter(
@@ -204,15 +225,15 @@ const blacklistedTokens = [];
 const logoutController = (req, res) => {
   try {
     // Clear the JWT cookies on the client-side
-    res.clearCookie("authToken");
+    // res.clearCookie("authToken");
     res.clearCookie("refreshToken");
 
     // Retrieve the access token and refresh token from the request
-    const accessToken = req.cookies.authToken;
+    // const accessToken = req.cookies.authToken;
     const refreshToken = req.cookies.refreshToken;
 
     // Add the tokens to the server-side blacklist (for illustration purposes)
-    blacklistedTokens.push(accessToken);
+    // blacklistedTokens.push(accessToken);
     blacklistedTokens.push(refreshToken);
 
     return res.status(200).json({ status: true, msg: "Logout successful" });

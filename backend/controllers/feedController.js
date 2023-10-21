@@ -122,12 +122,29 @@ const updateFeed = async (req, res) => {
   try {
     const feed_id = req.query.id;
     const feedDataToUpdate = req.body;
+    const newImageFile = req.file;
 
     if (!feed_id) {
       return res.status(400).json({
         status: false,
         msg: "No userId or feedId provided",
       });
+    }
+
+     // Check if a new image file has been provided
+     if (newImageFile) {
+      // Retrieve the existing image key from the database
+      const existingFeed = await feedModel.findById(feed_id);
+      const existingImageKey = existingFeed.image;
+
+      // Delete the old image from S3
+      await s3.deleteObject({ Bucket: process.env.WASABI_BUCKET, Key: existingImageKey }).promise();
+
+      // Generate a pre-signed URL for the new image
+      const newImageURL = generatePublicPresignedUrl(newImageFile.key);
+     
+      // Update the project data to include the new image URL
+      feedDataToUpdate.image = newImageURL;
     }
 
     // Construct an update object with only provided fields

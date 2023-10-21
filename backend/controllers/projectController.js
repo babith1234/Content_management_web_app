@@ -207,8 +207,6 @@ const updateProject = async (req, res) => {
     const projectDataToUpdate = req.body;
     const newImageFile = req.file; 
 
-    console.log(newImageFile)
-
     if (!project_id) {
       return res.status(400).json({
         status: false,
@@ -273,6 +271,7 @@ const updateProject = async (req, res) => {
 // DISPLAY ALL THE PROJECTS IN THE PROJECTS MODEL 
 const getAllProjects = async (req, res) => {
   try {
+    
     const projects = await projectModel.find();
 
     return res.status(200).send({

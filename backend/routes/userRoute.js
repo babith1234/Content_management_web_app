@@ -11,7 +11,7 @@ const router=express.Router()
 
 // REGISTRATION, LOGIN, LOGOUT ROUTE
 router.post("/register",upload.single('profile_pic'),userController.createUser)
-router.put("/users/:id",userController.updateUser)
+router.put("/users",upload.single('profile_pic'),userController.updateUser)
 router.post("/login",userController.loginUser)
 router.post("/logout",userController.logoutController)
 
@@ -31,7 +31,7 @@ router.get("/contacts",contactController.displayForm)
 router.post("/feeds",authenticateMiddleware,upload.single('image'),feedController.createFeeds)
 router.get("/feeds",feedController.getFeeds)
 router.delete("/feeds",feedController.deleteFeed)
-router.put("/feeds",feedController.updateFeed)
+router.put("/feeds",upload.single('image'),feedController.updateFeed)
 router.get("/feeds/all",feedController.displayFeed)
 
 
@@ -41,14 +41,14 @@ router.post('/services', authenticateMiddleware,upload.single('service_image'), 
 router.get('/services', servicesController.getServices);
 router.delete('/services', servicesController.deleteService);
 router.put('/services', servicesController.updateService)
-router.get("/services/all",servicesController.deleteService)
+router.get("/services/all",upload.single('service_image'),servicesController.displayServices)
 
 
 // TESTIMONIALS CREATION, DISPLAY, DELETE, UPDATE ROUTE
 router.post('/testimonial',upload.single('client_image'),testimonialController.createTestimonial );
 router.get('/testimonial', testimonialController.getAllTestimonials);
 router.delete('/testimonial', testimonialController.deleteTestimonial);
-router.put('/testimonial', testimonialController.updateTestimonial)
+router.put('/testimonial',upload.single('client_image'), testimonialController.updateTestimonial)
 
 
 module.exports=router

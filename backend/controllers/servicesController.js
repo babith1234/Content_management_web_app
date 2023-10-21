@@ -121,12 +121,30 @@ const updateService = async (req, res) => {
   try {
     const service_id = req.query.id;
     const serviceDataToUpdate = req.body;
+    const newImageFile = req.file; 
 
     if (!service_id) {
       return res.status(400).json({
         status: false,
         msg: "No userId or serviceId provided",
       });
+    }
+
+    // Check if a new image file has been provided
+    if (newImageFile) {
+      // Retrieve the existing image key from the database
+      const existingService = await serviceModel.findById(service_id);
+      const existingImageKey = existingService.service_image;
+
+      // Delete the old image from S3
+      await s3.deleteObject({ Bucket: process.env.WASABI_BUCKET, Key: existingImageKey }).promise();
+
+      // Generate a pre-signed URL for the new image
+      const newImageURL = generatePublicPresignedUrl(newImageFile.key);
+     
+  
+      // Update the project data to include the new image URL
+      serviceDataToUpdate.service_image = newImageURL;
     }
 
     // Construct an update object with only provided fields
@@ -170,12 +188,13 @@ const displayServices = async (req, res) => {
       return res.status(400).json({
         status: false,
         msg: "No services found",
-        data: serviceData,
+        
       });
     }
     return res.status(200).json({
       status: true,
       msg: "Services retrieved successfully",
+      data: serviceData,
     });
   } catch (error) {
     return res.status(500).json({
@@ -190,4 +209,5 @@ module.exports = {
   getServices,
   deleteService,
   updateService,
+  displayServices
 };

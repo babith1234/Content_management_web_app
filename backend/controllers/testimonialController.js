@@ -115,11 +115,13 @@ const deleteImageFromS3 = (imageKey) => {
   });
 };
 
+
 // UPDATE A TESTIMONIAL
 const updateTestimonial = async (req, res) => {
   try {
     const testimonial_id = req.query.id;
     const testimonialDataToUpdate = req.body;
+    const newImageFile = req.file;
 
     if (!testimonial_id) {
       return res.status(400).json({
@@ -127,6 +129,22 @@ const updateTestimonial = async (req, res) => {
         msg: "No userId or testimonailId provided",
       });
     }
+
+      // Check if a new image file has been provided
+      if (newImageFile) {
+        // Retrieve the existing image key from the database
+        const existingTestimonial = await testimonialModel.findById(testimonial_id);
+        const existingImageKey = existingTestimonial.client_image;
+  
+        // Delete the old image from S3
+        await s3.deleteObject({ Bucket: process.env.WASABI_BUCKET, Key: existingImageKey }).promise();
+  
+        // Generate a pre-signed URL for the new image
+        const newImageURL = generatePublicPresignedUrl(newImageFile.key);
+       
+        // Update the project data to include the new image URL
+        testimonialDataToUpdate.client_image = newImageURL;
+      }
 
     // Construct and update object with only provided fields
     const updateObject = {};
