@@ -85,6 +85,7 @@ const loginUser = async (req, res) => {
   try {
     // Extract email and password from the request body
     const { email_id, password } = req.body;
+    
 
     // Attempt to find a user in the database based on the provided email
     const userData = await userModel.findOne({ email_id });
@@ -135,7 +136,7 @@ const loginUser = async (req, res) => {
     }); // 30 days in milliseconds
 
     // Return a JSON response with success status and the JWT tokens
-    return res.json({ success: true, authToken: accessToken });
+    return res.json({ success: true, authToken: accessToken,refToken:refreshToken });
   } catch (error) {
     // Handle any unexpected errors
     console.error("Error during login:", error);
