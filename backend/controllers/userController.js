@@ -108,10 +108,11 @@ const loginUser = async (req, res) => {
     }
 
     // If email and password are valid, create a JWT access token and a refresh token
-    const accessTokenPayload = {
-      user_id: userData.id,
-      exp: Math.floor(Date.now() / 1000) + 3600, // Set expiration time to 1 hour from now
-    };
+      const accessTokenPayload = {
+        user_id: userData.id,
+        role: userData.role,
+        exp: Math.floor(Date.now() / 1000) + 3600, // Set expiration time to 1 hour from now
+      };
 
     const refreshTokenPayload = {
       user_id: userData.id,
