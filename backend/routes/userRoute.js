@@ -14,11 +14,13 @@ router.post("/register",upload.single('profile_pic'),userController.createUser)
 router.put("/users",upload.single('profile_pic'),userController.updateUser)
 router.post("/login",userController.loginUser)
 router.post("/logout",userController.logoutController)
+router.get("/user",authenticateMiddleware,userController.getUser)
+router.get("/users",userController.getAllusers)
 
 
 // PROJECT CREATION, DISPLAY, DELETE, UPDATE ROUTE
 router.post("/projects", authenticateMiddleware,upload.single('project_image'), projectController.createProject);
-router.get("/projects",projectController.getProjects)
+router.get("/projects",authenticateMiddleware,projectController.getProjects)
 router.delete("/projects",projectController.deleteProject)
 router.put("/projects",upload.single('project_image'),projectController.updateProject)
 
@@ -28,22 +30,22 @@ router.get("/contacts",contactController.displayForm)
 
 // FEEDS CREATION, DISPLAY, DELETE, UPDATE ROUTE
 router.post("/feeds",authenticateMiddleware,upload.single('image'),feedController.createFeeds)
-router.get("/feeds",feedController.getFeeds)
+router.get("/feeds", authenticateMiddleware,feedController.getFeeds)
 router.delete("/feeds",feedController.deleteFeed)
 router.put("/feeds",upload.single('image'),feedController.updateFeed)
 
 
 // SERVICES CREATION, DISPLAY, DELETE, UPDATE ROUTE
 router.post('/services', authenticateMiddleware,upload.single('service_image'), servicesController.createService);
-router.get('/services', servicesController.getServices);
+router.get('/services',authenticateMiddleware, servicesController.getServices);
 router.delete('/services', servicesController.deleteService);
-router.put('/services', servicesController.updateService)
+router.put('/services',upload.single('service_image'), servicesController.updateService)
 
 
 
 // TESTIMONIALS CREATION, DISPLAY, DELETE, UPDATE ROUTE
 router.post('/testimonial',authenticateMiddleware,upload.single('client_image'),testimonialController.createTestimonial );
-router.get('/testimonial', testimonialController.getAllTestimonials);
+router.get('/testimonial', authenticateMiddleware,testimonialController.getTestimonials);
 router.delete('/testimonial', testimonialController.deleteTestimonial);
 router.put('/testimonial',upload.single('client_image'), testimonialController.updateTestimonial)
 

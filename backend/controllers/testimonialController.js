@@ -2,6 +2,9 @@ const testimonialModel = require("../models/testimonialModel");
 const multerConfig = require("../middleware/multer");
 const { generatePublicPresignedUrl } = require("../middleware/multer");
 
+// Access the 's3' object
+const s3 = multerConfig.s3;
+
 // CREATE A TESTIMONIAL CONTROLLER
 const createTestimonial = async (req, res) => {
   try {
@@ -19,8 +22,6 @@ const createTestimonial = async (req, res) => {
         .status(400)
         .send({ status: false, msg: "No testimonial image provided" });
     }
-    // Assuming req.user contains user information from authentication middleware
-    // const userId = req.user.user_id;
 
     // Generate a pre-signed URL for public access with a 12-hour expiration
     const preSignedUrl = generatePublicPresignedUrl(req.file.key);
@@ -46,23 +47,51 @@ const createTestimonial = async (req, res) => {
 };
 
 // GET ALL TESTIMONIALS
-const getAllTestimonials = async (req, res) => {
+const getTestimonials = async (req, res) => {
   try {
-    const testimonials = await testimonialModel.find();
+    const userId = req.user.user_id;
+
+    const testimonialId = req.query.testimonialId;
+    if (testimonialId) {
+      const testimonial = await testimonialModel.find({ _id: testimonialId });
+      return res.status(200).send({
+        status: true,
+        msg: "testimonials retrieved successfully",
+        data: testimonial,
+      });
+    }
+
+    if (!userId) {
+      try {
+        const testimonials = await testimonialModel.find();
+
+        return res.status(200).send({
+          status: true,
+          msg: "All testimonials retrieved successfully",
+          data: testimonials,
+        });
+      } catch (error) {
+        console.error(error);
+        return res
+          .status(500)
+          .send({ msg: "Internal server error", status: false });
+      }
+    }
+
+    const userTestimonials = await testimonialModel.find({ user: userId });
 
     return res.status(200).json({
       status: true,
-      msg: "Testimonials retrieved successfully",
-      data: testimonials,
+      msg: "User testimonials retrieved successfully",
+      data: userTestimonials,
     });
   } catch (error) {
-    console.error(error);
+    console.log(error);
     return res
       .status(500)
-      .json({ status: false, msg: "Internal server error" });
+      .json({ msg: "Internal server error", status: false });
   }
 };
-
 // delete testimonials
 
 const deleteTestimonial = async (req, res) => {
@@ -118,7 +147,6 @@ const deleteImageFromS3 = (imageKey) => {
   });
 };
 
-
 // UPDATE A TESTIMONIAL
 const updateTestimonial = async (req, res) => {
   try {
@@ -133,21 +161,28 @@ const updateTestimonial = async (req, res) => {
       });
     }
 
-      // Check if a new image file has been provided
-      if (newImageFile) {
-        // Retrieve the existing image key from the database
-        const existingTestimonial = await testimonialModel.findById(testimonial_id);
-        const existingImageKey = existingTestimonial.client_image;
-  
-        // Delete the old image from S3
-        await s3.deleteObject({ Bucket: process.env.WASABI_BUCKET, Key: existingImageKey }).promise();
-  
-        // Generate a pre-signed URL for the new image
-        const newImageURL = generatePublicPresignedUrl(newImageFile.key);
-       
-        // Update the project data to include the new image URL
-        testimonialDataToUpdate.client_image = newImageURL;
-      }
+    // Check if a new image file has been provided
+    if (newImageFile) {
+      // Retrieve the existing image key from the database
+      const existingTestimonial = await testimonialModel.findById(
+        testimonial_id
+      );
+      const existingImageKey = existingTestimonial.client_image;
+
+      // Delete the old image from S3
+      await s3
+        .deleteObject({
+          Bucket: process.env.WASABI_BUCKET,
+          Key: existingImageKey,
+        })
+        .promise();
+
+      // Generate a pre-signed URL for the new image
+      const newImageURL = generatePublicPresignedUrl(newImageFile.key);
+
+      // Update the project data to include the new image URL
+      testimonialDataToUpdate.client_image = newImageURL;
+    }
 
     // Construct and update object with only provided fields
     const updateObject = {};
@@ -185,7 +220,7 @@ const updateTestimonial = async (req, res) => {
 
 module.exports = {
   createTestimonial,
-  getAllTestimonials,
+  getTestimonials,
   deleteTestimonial,
   updateTestimonial,
 };

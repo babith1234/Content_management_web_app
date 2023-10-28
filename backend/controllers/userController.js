@@ -2,8 +2,8 @@ const userModel = require("../models/userModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const aws = require("aws-sdk");
-const multerConfig = require('../middleware/multer');
-const {generatePublicPresignedUrl} = require('../middleware/multer');
+const multerConfig = require("../middleware/multer");
+const { generatePublicPresignedUrl } = require("../middleware/multer");
 // Access the 's3' object
 const s3 = multerConfig.s3;
 
@@ -85,7 +85,7 @@ const loginUser = async (req, res) => {
   try {
     // Extract email and password from the request body
     const { email_id, password } = req.body;
-    
+    console.log(req.body);
 
     // Attempt to find a user in the database based on the provided email
     const userData = await userModel.findOne({ email_id });
@@ -127,16 +127,19 @@ const loginUser = async (req, res) => {
       process.env.JWT_REFRESH_KEY
     );
 
-    // Set the JWT refresh token as an HTTP-only cookie (secure and SameSite settings included)
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      sameSite: "None", // Adjust SameSite attribute based on your requirements
+      sameSite: "None",
       secure: true,
       maxAge: 86400 * 30 * 1000,
-    }); // 30 days in milliseconds
+    });
 
     // Return a JSON response with success status and the JWT tokens
-    return res.json({ success: true, authToken: accessToken,refToken:refreshToken });
+    return res.json({
+      success: true,
+      authToken: accessToken,
+      refToken: refreshToken,
+    });
   } catch (error) {
     // Handle any unexpected errors
     console.error("Error during login:", error);
@@ -146,11 +149,54 @@ const loginUser = async (req, res) => {
   }
 };
 
+const getUser = async (req, res) => {
+  try {
+    const userId = req.user.user_id;
+    console.log(userId);
+
+    const userData = await userModel.findOne({ _id: userId });
+
+    if (!userData) {
+      return res.status(404).json({
+        status: false,
+        msg: "User not found",
+      });
+    }
+
+    return res.status(200).json({
+      status: true,
+      msg: "User data retrieved successfully",
+      data: userData,
+    });
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .json({ msg: "Internal server error", status: false });
+  }
+};
+
+const getAllusers = async (req, res) => {
+  try {
+    const allUsers = await userModel.find();
+    return res.status(200).json({
+      status: true,
+      msg: " all User data retrieved successfully",
+      data: allUsers,
+    });
+  } catch (e) {
+    return res.status(404).json({
+      status: flse,
+      msg: " error retrieving users",
+    });
+  }
+};
+
 //                      UPDATE USER CONTROLLER
 const updateUser = async (req, res) => {
   try {
     // Extract user ID from the request parameters or body
-    const userId = req.query.id
+    const userId = req.query.id;
 
     const userData = req.body;
     const newImageFile = req.file;
@@ -252,4 +298,6 @@ module.exports = {
   updateUser,
   logoutController,
   blacklistedTokens,
+  getUser,
+  getAllusers
 };

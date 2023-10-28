@@ -2,6 +2,9 @@ const feedModel = require("../models/feedModel");
 const multerConfig = require("../middleware/multer");
 const { generatePublicPresignedUrl } = require("../middleware/multer");
 
+// Access the 's3' object
+const s3 = multerConfig.s3;
+
 // CREATE A FEEDS CONTROLLER
 
 const createFeeds = async (req, res) => {
@@ -44,7 +47,10 @@ const createFeeds = async (req, res) => {
 const getFeeds = async (req, res) => {
   try {
     
-    const userId = req.query.id;
+    const serviceId = req.query.serviceId;
+
+    const userId = req.user.user_id;
+
     if(!userId){
       try {
         const feedData = await feedModel.find();

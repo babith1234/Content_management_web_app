@@ -8,40 +8,38 @@ import Cookies from "js-cookie";
 import { useParams } from "react-router-dom";
 const accessToken = Cookies.get("accessToken");
 
-const TestimonialForm = () => {
+const ServiceForm = () => {
   const [formData, setFormData] = useState({
-    client_image: null,
-    client_name: "",
-    client_company: "",
-    client_description: "",
+    service_image: null,
+    service_name: "",
+    service_description: "",
   });
-  const { testimonialId } = useParams();
-  console.log(testimonialId);
+  const { serviceId } = useParams();
   const navigate = useNavigate();
 
   const fetchData = async () => {
     try {
       const response1 = await axios.get(
-        `http://localhost:4000/testimonial?testimonialId=${testimonialId}`,{
+        `http://localhost:4000/services?serviceId=${serviceId}`,{
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         }
       );
-      const existingTestimonialData = response1.data.data;
-      console.log(existingTestimonialData)
+      const existingServiceData = response1.data.data;
 
-      setFormData(...existingTestimonialData);
+      console.log(existingServiceData)
+      setFormData(existingServiceData);
     } catch (error) {
-      console.error("Error fetching testimonial data:", error);
+      console.error("Error fetching service data:", error);
     }
   };
 
   useEffect(() => {
-    if (testimonialId) {
+    if (serviceId) {
       fetchData();
     }
-  }, [testimonialId]);
+  }, [serviceId]);
 
   const handleChange = (e) => {
     const value = e.target.type === "file" ? e.target.files[0] : e.target.value;
@@ -53,31 +51,33 @@ const TestimonialForm = () => {
     e.preventDefault();
     try {
       const formDataForSubmit = new FormData();
-      formDataForSubmit.append("client_image", formData.client_image);
-      formDataForSubmit.append("client_name", formData.client_name);
-      formDataForSubmit.append("client_company", formData.client_company);
-      formDataForSubmit.append("client_description", formData.client_description);
+      formDataForSubmit.append("service_image", formData.service_image);
+      formDataForSubmit.append("service_name", formData.service_name);
+      formDataForSubmit.append(
+        "service_description",
+        formData.service_description
+      );
 
-      if (testimonialId) {
+      if (serviceId) {
         const response = await axios.put(
-          `http://localhost:4000/testimonial?id=${testimonialId}`,
+          `http://localhost:4000/services?id=${serviceId}`,
           formDataForSubmit
         );
 
-        const updatedTestimonial = response.data.data;
+        const updatedService = response.data.data;
         alert("Updated successfully");
-        navigate("/testimonials");
+        navigate("/services");
       } else {
-        await axios.post("http://localhost:4000/testimonial", formDataForSubmit, {
+        await axios.post("http://localhost:4000/services", formDataForSubmit, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         });
-        console.log("Testimonial submitted successfully");
-        alert("Testimonial submitted successfully");
+        console.log("Service submitted successfully");
+        alert("Service submitted successfully");
       }
     } catch (error) {
-      console.error("Error submitting Testimonial:", error);
+      console.error("Error submitting project:", error);
     }
   };
 
@@ -94,7 +94,7 @@ const TestimonialForm = () => {
 
         {/* Heading */}
         <h1 className="text-4xl font-bold text-white mb-8">
-          Enter Testimonial Details
+          Enter Service Details
         </h1>
 
         <form
@@ -103,15 +103,15 @@ const TestimonialForm = () => {
         >
           <div className="mb-4">
             <label
-              htmlFor="client_image"
+              htmlFor="service_image"
               className="block text-sm font-medium text-gray-600"
             >
-              Client Image
+              Service Image
             </label>
             <input
               type="file"
-              id="client_image"
-              name="client_image"
+              id="service_image"
+              name="service_image"
               onChange={handleChange}
               className="mt-1 p-2 border border-gray-300 rounded-md w-full"
               required
@@ -120,16 +120,16 @@ const TestimonialForm = () => {
 
           <div className="mb-4">
             <label
-              htmlFor="client_name"
+              htmlFor="service_name"
               className="block text-sm font-medium text-gray-600"
             >
-              Client Name
+              Service Name
             </label>
             <input
               type="text"
-              id="client_name"
-              name="client_name"
-              value={formData.client_name}
+              id="service_name"
+              name="service_name"
+              value={formData.service_name}
               onChange={handleChange}
               className="mt-1 p-2 border border-gray-300 rounded-md w-full"
               required
@@ -138,34 +138,15 @@ const TestimonialForm = () => {
 
           <div className="mb-4">
             <label
-              htmlFor="client_company"
+              htmlFor="service_description"
               className="block text-sm font-medium text-gray-600"
             >
-              Client company
-            </label>
-            <input
-              type="text"
-              id="client_company"
-              name="client_company"
-              value={formData.client_company}
-              onChange={handleChange}
-              className="mt-1 p-2 border border-gray-300 rounded-md w-full"
-              required
-            />
-          </div>
-
-
-          <div className="mb-4">
-            <label
-              htmlFor="client_description"
-              className="block text-sm font-medium text-gray-600"
-            >
-              Client description
+              Service Description
             </label>
             <textarea
-              id="client_description"
-              name="client_description"
-              value={formData.client_description}
+              id="service_description"
+              name="service_description"
+              value={formData.service_description}
               onChange={handleChange}
               className="mt-1 p-2 border border-gray-300 rounded-md w-full"
               required
@@ -177,7 +158,7 @@ const TestimonialForm = () => {
               className="bg-blue-500 hover:bg-cyan-600  text-white font-bold py-2 px-4 rounded-full shadow-2xl"
               onClick={handleSubmit}
             >
-              {testimonialId ? "Update" : "Submit"}
+              {serviceId ? "Update" : "Submit"}
             </button>
           </div>
         </form>
@@ -186,4 +167,4 @@ const TestimonialForm = () => {
   );
 };
 
-export default TestimonialForm;
+export default ServiceForm;

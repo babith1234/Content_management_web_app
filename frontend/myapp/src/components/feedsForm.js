@@ -8,40 +8,39 @@ import Cookies from "js-cookie";
 import { useParams } from "react-router-dom";
 const accessToken = Cookies.get("accessToken");
 
-const TestimonialForm = () => {
+const FeedForm = () => {
   const [formData, setFormData] = useState({
-    client_image: null,
-    client_name: "",
-    client_company: "",
-    client_description: "",
+    image: null,
+    description: "",
   });
-  const { testimonialId } = useParams();
-  console.log(testimonialId);
+  const { feedId } = useParams();
+  console.log(feedId);
   const navigate = useNavigate();
 
   const fetchData = async () => {
     try {
       const response1 = await axios.get(
-        `http://localhost:4000/testimonial?testimonialId=${testimonialId}`,{
+        `http://localhost:4000/feeds?feedId=${feedId}`,{
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         }
       );
-      const existingTestimonialData = response1.data.data;
-      console.log(existingTestimonialData)
-
-      setFormData(...existingTestimonialData);
+      const existingfeedData = response1.data.data;
+      console.log(existingfeedData);
+      setFormData(...existingfeedData);
     } catch (error) {
-      console.error("Error fetching testimonial data:", error);
+      console.error("Error fetching feed data:", error);
     }
   };
 
+  console.log(formData);
+
   useEffect(() => {
-    if (testimonialId) {
+    if (feedId) {
       fetchData();
     }
-  }, [testimonialId]);
+  }, [feedId]);
 
   const handleChange = (e) => {
     const value = e.target.type === "file" ? e.target.files[0] : e.target.value;
@@ -53,31 +52,29 @@ const TestimonialForm = () => {
     e.preventDefault();
     try {
       const formDataForSubmit = new FormData();
-      formDataForSubmit.append("client_image", formData.client_image);
-      formDataForSubmit.append("client_name", formData.client_name);
-      formDataForSubmit.append("client_company", formData.client_company);
-      formDataForSubmit.append("client_description", formData.client_description);
+      formDataForSubmit.append("image", formData.image);
+      formDataForSubmit.append("description", formData.description);
 
-      if (testimonialId) {
+      if (feedId) {
         const response = await axios.put(
-          `http://localhost:4000/testimonial?id=${testimonialId}`,
+          `http://localhost:4000/feeds?id=${feedId}`,
           formDataForSubmit
         );
 
-        const updatedTestimonial = response.data.data;
+        const updatedFeed = response.data.data;
         alert("Updated successfully");
-        navigate("/testimonials");
+        navigate("/feeds");
       } else {
-        await axios.post("http://localhost:4000/testimonial", formDataForSubmit, {
+        await axios.post("http://localhost:4000/feeds", formDataForSubmit, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         });
-        console.log("Testimonial submitted successfully");
-        alert("Testimonial submitted successfully");
+        console.log("Feeds submitted successfully");
+        alert("Feeds submitted successfully");
       }
     } catch (error) {
-      console.error("Error submitting Testimonial:", error);
+      console.error("Error submitting Feeds:", error);
     }
   };
 
@@ -94,7 +91,7 @@ const TestimonialForm = () => {
 
         {/* Heading */}
         <h1 className="text-4xl font-bold text-white mb-8">
-          Enter Testimonial Details
+          Create a new Feed
         </h1>
 
         <form
@@ -103,16 +100,17 @@ const TestimonialForm = () => {
         >
           <div className="mb-4">
             <label
-              htmlFor="client_image"
+              htmlFor="image"
               className="block text-sm font-medium text-gray-600"
             >
-              Client Image
+              Image
             </label>
             <input
               type="file"
-              id="client_image"
-              name="client_image"
+              id="image"
+              name="image"
               onChange={handleChange}
+              placeholder="yuygyug"
               className="mt-1 p-2 border border-gray-300 rounded-md w-full"
               required
             />
@@ -120,52 +118,15 @@ const TestimonialForm = () => {
 
           <div className="mb-4">
             <label
-              htmlFor="client_name"
+              htmlFor="description"
               className="block text-sm font-medium text-gray-600"
             >
-              Client Name
-            </label>
-            <input
-              type="text"
-              id="client_name"
-              name="client_name"
-              value={formData.client_name}
-              onChange={handleChange}
-              className="mt-1 p-2 border border-gray-300 rounded-md w-full"
-              required
-            />
-          </div>
-
-          <div className="mb-4">
-            <label
-              htmlFor="client_company"
-              className="block text-sm font-medium text-gray-600"
-            >
-              Client company
-            </label>
-            <input
-              type="text"
-              id="client_company"
-              name="client_company"
-              value={formData.client_company}
-              onChange={handleChange}
-              className="mt-1 p-2 border border-gray-300 rounded-md w-full"
-              required
-            />
-          </div>
-
-
-          <div className="mb-4">
-            <label
-              htmlFor="client_description"
-              className="block text-sm font-medium text-gray-600"
-            >
-              Client description
+              Description
             </label>
             <textarea
-              id="client_description"
-              name="client_description"
-              value={formData.client_description}
+              id="description"
+              name="description"
+              value={formData.description}
               onChange={handleChange}
               className="mt-1 p-2 border border-gray-300 rounded-md w-full"
               required
@@ -177,7 +138,7 @@ const TestimonialForm = () => {
               className="bg-blue-500 hover:bg-cyan-600  text-white font-bold py-2 px-4 rounded-full shadow-2xl"
               onClick={handleSubmit}
             >
-              {testimonialId ? "Update" : "Submit"}
+              {feedId ? "Update" : "Submit"}
             </button>
           </div>
         </form>
@@ -186,4 +147,4 @@ const TestimonialForm = () => {
   );
 };
 
-export default TestimonialForm;
+export default FeedForm;

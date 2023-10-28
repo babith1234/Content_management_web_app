@@ -2,6 +2,10 @@ const servicesModel = require("../models/servicesModel");
 const multerConfig = require("../middleware/multer");
 const { generatePublicPresignedUrl } = require("../middleware/multer");
 
+// Access the 's3' object
+const s3 = multerConfig.s3;
+
+
 // CREATE A SERVICE CONTROLLER
 const createService = async (req, res) => {
   try {
@@ -43,19 +47,27 @@ const createService = async (req, res) => {
 
 // DISPLAY LOGGED IN USER'S SERVICES
 const getServices = async (req, res) => {
-  
   try {
-    
-    const userId = req.query.user; 
-    if(!userId){
+    const userId = req.user.user_id;
+
+    const serviceId = req.query.serviceId;
+    if (serviceId) {
+      const service = await servicesModel.findOne({ _id: serviceId });
+      return res.status(200).send({
+        status: true,
+        msg: "service retrieved successfully",
+        data: service,
+      });
+    }
+
+    if (!userId) {
       try {
         const serviceData = await servicesModel.find();
-    
+
         if (!serviceData) {
           return res.status(400).json({
             status: false,
             msg: "No services found",
-            
           });
         }
         return res.status(200).json({
@@ -85,7 +97,6 @@ const getServices = async (req, res) => {
       .json({ msg: "Internal server error", status: false });
   }
 };
-
 
 // DELETE A SERVICE
 const deleteService = async (req, res) => {
@@ -141,13 +152,12 @@ const deleteImageFromS3 = (imageKey) => {
   });
 };
 
-
 // UPDATE A SERVICE
 const updateService = async (req, res) => {
   try {
     const service_id = req.query.id;
     const serviceDataToUpdate = req.body;
-    const newImageFile = req.file; 
+    const newImageFile = req.file;
 
     if (!service_id) {
       return res.status(400).json({
@@ -159,16 +169,20 @@ const updateService = async (req, res) => {
     // Check if a new image file has been provided
     if (newImageFile) {
       // Retrieve the existing image key from the database
-      const existingService = await serviceModel.findById(service_id);
+      const existingService = await servicesModel.findById(service_id);
       const existingImageKey = existingService.service_image;
 
       // Delete the old image from S3
-      await s3.deleteObject({ Bucket: process.env.WASABI_BUCKET, Key: existingImageKey }).promise();
+      await s3
+        .deleteObject({
+          Bucket: process.env.WASABI_BUCKET,
+          Key: existingImageKey,
+        })
+        .promise();
 
       // Generate a pre-signed URL for the new image
       const newImageURL = generatePublicPresignedUrl(newImageFile.key);
-     
-  
+
       // Update the project data to include the new image URL
       serviceDataToUpdate.service_image = newImageURL;
     }
@@ -211,5 +225,4 @@ module.exports = {
   getServices,
   deleteService,
   updateService,
- 
 };
