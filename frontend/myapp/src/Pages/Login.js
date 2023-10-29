@@ -155,11 +155,11 @@ const LoginForm = () => {
       <Navbar />
       <div className="flex justify-center items-center h-screen">
         <form
-          className="w-96 bg-gradient-to-l from-cyan-100 to-blue-100 p-6 rounded shadow-outline shadow-2xl
+          className="w-96 bg-crimson p-6 rounded shadow-outline shadow-2xl
         "
         >
           <div className="mb-3 ">
-            <label className="font-medium mb-2 flex">Email</label>
+            <label className="font-medium mb-2 flex text-white">Email</label>
             <input
               type="email"
               placeholder="Enter your email"
@@ -170,7 +170,7 @@ const LoginForm = () => {
             />
           </div>
           <div className="mb-3">
-            <label className="font-medium mb-2 flex">Password</label>
+            <label className="font-medium mb-2 flex text-white">Password</label>
             <input
               type="password"
               placeholder="Enter your password"
@@ -181,21 +181,21 @@ const LoginForm = () => {
             />
           </div>
           <div className="flex justify-between mb-6">
-            <label>
-              <input type="checkbox" className="mr-2" />
+            <label className=" text-white">
+              <input type="checkbox" className="mr-2"/>
               Remember me
-            </label>
-            <span>Forgot password?</span>
+            </label >
+            <span className=" text-white">Forgot password?</span>
           </div>
           <button
-            className="block bg-blue-700 hover:bg-blue-800 text-white w-full py-2 px rounded"
+            className="block bg-white text-crimson  hover:bg-yellow-500 w-full py-2 px rounded"
             onClick={handleSubmit}
           >
             Login
           </button>
           <div className="mt-4 text-center">
             Don't have an account yet?
-            <span className="text-blue-700 cursor-pointer">Login</span>
+            <span className="text-white cursor-pointer">Login</span>
           </div>
         </form>
       </div>

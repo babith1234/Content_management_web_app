@@ -1,13 +1,14 @@
 import React from "react";
+import logo from "../images/logo.png"
 
 function Footer() {
   return (
-    <footer className=" bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-opacity-90 text-white p-8">
+    <footer className=" bg-crimson bg-opacity-90 text-white p-8">
       <div className="container mx-auto flex flex-wrap justify-between">
         {/* First Section: Company Image and Description */}
         <div className="mb-6 md:mb-0 w-full md:w-1/4">
           <img
-            src="eco1.JPG"
+            src={logo}
             alt="Company Image"
             className="w-40 h-40 rounded-lg mb-4"
           />

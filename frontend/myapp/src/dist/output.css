@@ -596,3 +596,23 @@ video {
 .overflow-y-scroll::-webkit-scrollbar {
  display: none; /* Width of the scrollbar */
 }
+
+/* .bg-crimson{
+  background-color: crimson;
+}
+.text-crimson{
+  color: crimson;
+} */
+/* Decrease the opacity of the background color */
+.bg-crimson {
+  background-color: rgba(241, 34, 75, 0.918); /* Opacity is set to 0.5 */
+}
+
+/* Decrease the opacity of the text color */
+.text-crimson {
+  color: rgba(220, 20, 60, 0.865); /* Opacity is set to 0.5 */
+}
+
+.border-crimson{
+  border: 2px solid crimson;
+}

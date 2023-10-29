@@ -23,7 +23,7 @@ const HomePage = () => {
       </div> */}
 
       {/* Gradient background section */}
-      <div className="col-span-full bg-gradient-to-b from-gray-100 via-gray-400 to-gray-700">
+      <div className="col-span-full bg-white">
         {/* Projects section */}
         <div className="p-4">
           <div className="w-full md:w-2/3 mx-auto">
@@ -33,7 +33,7 @@ const HomePage = () => {
       </div>
 
       {/* Testimonials section - Full Width */}
-      <div className="col-span-full bg-gradient-to-b from-gray-700 to-gray-100">
+      <div className="col-span-full bg-white">
         <div className="p-4">
           <Testimonial />
         </div>

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 
-import backgroundImg2 from "../images/background2.png";
+import backgroundImg2 from "../images/backgroundImg2.jpeg";
 import Cookies from "js-cookie";
 const accessToken = Cookies.get("accessToken");
 
@@ -30,15 +30,16 @@ const Profile = () => {
     <>
       
       <div
-        className="bg-gradient-to-t from-gray-600 to-gray-200 h-screen pt-10 "
+        className="bg-white h-screen pt-10 "
         style={{
           backgroundImage: `url(${backgroundImg2})`,
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
           backgroundPosition: "center",
+          marginTop:"0.1vh"
         }}
       >
-        <div className="bg-opacity-50 p-6 h-100 rounded-md shadow-lg max-w-md mx-auto transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-200 mt-20 ">
+        <div className="bg-white p-6 h-100 rounded-md shadow-lg max-w-md mx-auto transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-200 mt-20 ml-20 ">
           {userData ? (
             <div className="flex flex-col items-start ">
               <img
@@ -51,9 +52,9 @@ const Profile = () => {
                 <h2 className="text-2xl font-semibold mb-2 text-white">
                   {userData.name}
                 </h2>
-                <p className="text-gray-300 mb-2">Gender: {userData.gender}</p>
-                <p className="text-gray-300 mb-2">Email: {userData.email_id}</p>
-                <p className="text-gray-300 mb-4">Role: {userData.role}</p>
+                <p className="text-gray-300 mb-2 text-crimson">Gender: {userData.gender}</p>
+                <p className="text-gray-300 mb-2 text-crimson">Email: {userData.email_id}</p>
+                <p className="text-gray-300 mb-4 text-crimson">Role: {userData.role}</p>
               </div>
             </div>
           ) : (

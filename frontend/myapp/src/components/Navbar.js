@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
+import logo from "../images/logo.png"
 
 function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -24,10 +25,10 @@ function Navbar() {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-opacity-90 backdrop-blur-lg text-white p-2 flex items-center w-screen h-20">
+    <header className="top-0 left-0 right-0 z-50 bg-crimson text-white p-2 flex items-center w-screen h-20">
       <div className="container mx-auto flex justify-between items-center">
-        <div className="flex items-center space-x-4">
-          <span className="text-lg font-semibold">Company Name</span>
+      <div className="flex items-center space-x-4">
+          <img src={logo} alt="Company Logo" width="60" height="60" />{/* Use your image here */}
         </div>
         <button
           className="sm:hidden text-white hover:text-gray-200"
@@ -68,7 +69,7 @@ function Navbar() {
         </button>
       </div>
       {isMenuOpen && (
-        <div className="fixed top-0 left-0 w-full h-screen bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-opacity-90 text-white text-center pt-20">
+        <div className="fixed top-0 left-0 w-full h-screen bg-crimson text-white text-center pt-20">
           <button
             className="text-xl hover:text-gray-200 absolute top-4 left-4"
             onClick={closeMenu}
@@ -79,16 +80,15 @@ function Navbar() {
           <ul className="space-y-4">
             <li>
               <a
-                className="text-4xl hover:text-gray-200 hover:underline font-serif"
-                href="/home"
-                onClick={closeMenu}
+                className="text-white text-3xl hover:text-gray-200 hover:underline font-serif"
+                href="/"
               >
                 Home
               </a>
             </li>
             <li>
               <a
-                className="text-4xl hover:text-gray-200 hover:underline font-serif"
+                className="text-3xl hover:text-gray-200 hover:underline font-serif"
                 href="/projects"
                 onClick={closeMenu}
               >
@@ -97,7 +97,7 @@ function Navbar() {
             </li>
             <li>
               <a
-                className="text-4xl hover:text-gray-200 hover:underline font-serif"
+                className="text-3xl hover:text-gray-200 hover:underline font-serif"
                 href="/services"
               >
                 Services
@@ -105,7 +105,7 @@ function Navbar() {
             </li>
             <li>
               <a
-                className="text-4xl hover:text-gray-200 hover:underline font-serif"
+                className="text-3xl hover:text-gray-200 hover:underline font-serif"
                 href="/testimonials"
               >
                 Testimonials
@@ -114,7 +114,7 @@ function Navbar() {
 
             <li>
               <a
-                className="text-4xl hover:text-gray-200 hover:underline font-serif"
+                className="text-3xl hover:text-gray-200 hover:underline font-serif"
                 href="/feeds"
               >
                 Feeds
@@ -123,7 +123,7 @@ function Navbar() {
 
             <li>
               <a
-                className="text-4xl hover:text-gray-200 hover:underline font-serif"
+                className="text-3xl hover:text-gray-200 hover:underline font-serif"
                 href="/contacts"
               >
                 Contact
@@ -133,7 +133,7 @@ function Navbar() {
             {accessToken ? (
               <li>
                 <button
-                  className="text-4xl hover:text-gray-200 hover:underline font-serif"
+                  className="text-3xl bg-white text-crimson hover:text-gray-200 hover:underline font-serif"
                   onClick={handleLogout}
                 >
                   Logout
@@ -143,18 +143,16 @@ function Navbar() {
               <>
                 <li>
                   <a
-                    className="text-4xl hover:text-gray-200 hover:underline font-serif"
+                    className="bg-white  hover:bg-cyan-600 text-crimson font-bold py-2 px-4 rounded-full shadow-2xl"
                     href="/login"
-                    onClick={closeMenu}
                   >
                     Login
                   </a>
                 </li>
                 <li>
                   <a
-                    className="text-4xl hover:text-gray-200 hover:underline font-serif"
+                    className="bg-white hover:bg-cyan-600  text-crimson font-bold py-2 px-4 rounded-full shadow-2xl"
                     href="/register"
-                    onClick={closeMenu}
                   >
                     Register
                   </a>
@@ -164,7 +162,7 @@ function Navbar() {
           </ul>
         </div>
       )}
-      <ul className={`hidden sm:flex space-x-4`}>
+      <ul className={`hidden sm:flex space-x-4 mt`}>
         <li>
           <a
             className="text-white hover:text-gray-200 hover:underline font-serif"
@@ -216,7 +214,7 @@ function Navbar() {
         {accessToken ? (
           <li>
             <button
-              className="bg-blue-500 hover:bg-cyan-600  text-white font-bold py-2 px-4 rounded-full shadow-2xl"
+              className="bg-white  hover:bg-cyan-600 text-crimson font-bold py-2 px-4 rounded-full shadow-2xl"
               onClick={handleLogout}
             >
               Logout
@@ -226,7 +224,7 @@ function Navbar() {
           <>
             <li>
               <a
-                className="bg-blue-500 hover:bg-cyan-600  text-white font-bold py-2 px-4 rounded-full shadow-2xl"
+                className="bg-white  hover:bg-cyan-600 text-crimson font-bold py-2 px-4 rounded-full shadow-2xl"
                 href="/login"
               >
                 Login
@@ -234,7 +232,7 @@ function Navbar() {
             </li>
             <li>
               <a
-                className="bg-blue-500 hover:bg-cyan-600  text-white font-bold py-2 px-4 rounded-full shadow-2xl"
+                className="bg-white hover:bg-cyan-600  text-crimson font-bold py-2 px-4 rounded-full shadow-2xl"
                 href="/register"
               >
                 Register
