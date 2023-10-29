@@ -188,7 +188,7 @@ const LoginForm = () => {
             <span className=" text-white">Forgot password?</span>
           </div>
           <button
-            className="block bg-white text-crimson  hover:bg-yellow-500 w-full py-2 px rounded"
+            className="block bg-white text-crimson  hover:bg-blue-500 w-full py-2 px rounded"
             onClick={handleSubmit}
           >
             Login

@@ -58,12 +58,12 @@ const Registration = () => {
   return (
     <>
       <Navbar />
-      <div className="bg-gradient-to-b from-cyan-100 to-blue-500 min-h-screen flex items-center justify-center mt-10 ">
-        <div className="bg-gradient-to-l from-cyan-100 to-blue-100 p-10 rounded shadow-outline shadow-2xl md:w-96 lg:w-1/3 w-full mb-6 mt-20 ">
-          <h2 className="text-2xl font-bold mb-4">Register</h2>
+      <div className="bg-white min-h-screen flex items-center justify-center mt-10 ">
+        <div className="bg-crimson p-10 rounded shadow-outline shadow-2xl md:w-96 lg:w-1/3 w-full mb-6 mt-20 ">
+          <h2 className="text-2xl font-bold mb-4 text-white">Register</h2>
 
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-600">
+            <label className="block text-sm font-medium  text-white">
               Name
             </label>
             <div className="flex flex-col md:flex-row">
@@ -79,7 +79,7 @@ const Registration = () => {
           </div>
 
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-600">
+            <label className="block text-sm font-medium  text-white">
               Phone Number
             </label>
             <input
@@ -93,7 +93,7 @@ const Registration = () => {
           </div>
 
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-600">
+            <label className="block text-sm font-medium  text-white">
               Gender
             </label>
             <select
@@ -109,7 +109,7 @@ const Registration = () => {
           </div>
 
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-600">
+            <label className="block text-sm font-medium text-white">
               Email Address
             </label>
             <input
@@ -123,7 +123,7 @@ const Registration = () => {
           </div>
 
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-600">
+            <label className="block text-sm font-medium text-white">
               Password
             </label>
             <input
@@ -137,7 +137,7 @@ const Registration = () => {
           </div>
 
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-600">
+            <label className="block text-sm font-medium text-white">
               Profile Picture
             </label>
             <input
@@ -151,16 +151,16 @@ const Registration = () => {
 
           <div className="flex items-center justify-between mt-6">
             <button
-              className="bg-blue-500 hover:bg-cyan-600  text-white font-bold py-2 px-4 rounded-full shadow-2xl"
+              className="bg-white  text-crimson font-bold py-2 px-4 rounded-full shadow-2xl"
               onClick={handleSubmit}
             >
               Register
             </button>
           </div>
 
-          <p className="text-center mt-4 text-sm text-gray-600">
+          <p className="text-center mt-4 text-sm text-white">
             Already have an account?{" "}
-            <a href="/login" className="text-blue-500">
+            <a href="/login" className="text-white">
               Log In
             </a>
           </p>
