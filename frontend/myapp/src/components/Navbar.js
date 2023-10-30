@@ -25,7 +25,7 @@ function Navbar() {
   };
 
   return (
-    <header className="top-0 left-0 right-0 z-50 bg-crimson text-white p-2 flex items-center w-screen h-20">
+    <header className="top-0 left-0 right-0 z-50 bg-crimson  hover:opacity-80 text-white p-2 flex items-center w-screen h-20 transition transform hover:-translate-y-1 motion-reduce:transition-none motion-reduce:hover:transform-none rounded-b">
       <div className="container mx-auto flex justify-between items-center">
       <div className="flex items-center space-x-4">
           <img src={logo} alt="Company Logo" width="90" height="70" />{/* Use your image here */}

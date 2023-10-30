@@ -25,7 +25,7 @@ const Testimonial = () => {
   return (
     <div>
       <br></br>
-      <h2 className="text-3xl font-bold text-center mb-4 mt-10 text-crimson">
+      <h2 className="text-3xl font-bold text-center font-tech mb-4 mt-10 text-crimson">
         SOME VALUABLE FEEDBACK FROM MY CLIENTS
       </h2>
       <Carousel

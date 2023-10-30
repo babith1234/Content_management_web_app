@@ -70,8 +70,8 @@ const ServicePage = () => {
   return (
     <>
       <Navbar />
-      <div className="container mx-auto  bg-white p-10 h-screen">
-        <h1 className="text-3xl font-bold mb-4 text-center text-crimson">
+      <div className="container mx-auto  bg-white p-10 bg-gradient-to-r from-red-100 to-red-400 h-screen">
+        <h1 className="text-3xl font-bold font-minimal mb-4 text-center text-white">
           SERVICES
         </h1>
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-9">

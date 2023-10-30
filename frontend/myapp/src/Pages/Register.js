@@ -68,7 +68,7 @@ const Registration = () => {
   return (
     <>
       <Navbar />
-      <div className="bg-white min-h-screen flex items-center justify-center mt-10 ">
+      <div className="bg-white min-h-screen bg-gradient-to-r from-red-100 to-red-400 flex items-center justify-center  ">
         <div className="bg-crimson p-10 rounded-xl shadow-black shadow-lg md:w-96 lg:w-1/3 w-full mb-6 mt-20 ">
           <h2 className="text-2xl font-bold mb-4 text-white">Register</h2>
 
@@ -112,6 +112,7 @@ const Registration = () => {
               value={formData.gender}
               onChange={handleInputChange}
             >
+              <option value="">select your gender</option>
               <option value="male">Male</option>
               <option value="female">Female</option>
               <option value="other">Other</option>

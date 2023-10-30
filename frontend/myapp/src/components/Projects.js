@@ -23,11 +23,11 @@ const Projects = () => {
   }, []);
 
   return (
-    <div className="md:mt-0">
-      <h2 className="text-3xl font-bold mb-6 mt-10 text-center text-crimson">
+    <div className="md:mt-0  ">
+      <h2 className="text-3xl font-bold  mb-6 mt-10 font-tech text-center text-crimson">
         SOME OF MY PROJECTS
       </h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1  sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {projects.map((project) => (
           <div
             key={project._id} 

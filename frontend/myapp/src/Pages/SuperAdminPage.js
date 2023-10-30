@@ -123,7 +123,7 @@ const SuperAdminPage = () => {
 
   return (
     <>
-      <div className="bg-crimson">
+      <div className="bg-gradient-to-r from-red-200 to-red-600">
         <div className="container mx-auto p-2">
           <div className="md:flex items-center justify-between ">
             <h1 className="text-2xl text-white md:text-5xl flex-1 text-center md:text-left">
@@ -145,7 +145,7 @@ const SuperAdminPage = () => {
           </div>
         </div>
       </div>
-      <div className="min-h-screen bg-crimson">
+      <div className="min-h-screen bg-gradient-to-r from-red-200 to-red-600">
         <div className="container mx-auto p-2">
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-8 mt-1 mb-10">
             {users.map((user) => (
