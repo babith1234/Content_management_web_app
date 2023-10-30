@@ -71,12 +71,14 @@ const ServicePage = () => {
     <>
       <Navbar />
       <div className="container mx-auto  bg-white p-10 h-screen">
-        <h1 className="text-3xl font-bold mb-4 text-center text-crimson">SERVICES</h1>
+        <h1 className="text-3xl font-bold mb-4 text-center text-crimson">
+          SERVICES
+        </h1>
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-9">
           {services.map((service) => (
             <div
               key={service._id}
-              className="max-w-sm rounded overflow-hidden shadow-lg bg-crimson transform hover:scale-105 transition-transform"
+              className="max-w-sm rounded-xl overflow-hidden  shadow-black shadow-lg bg-crimson transform hover:scale-105 transition-transform"
             >
               <img
                 src={service.service_image || "https://via.placeholder.com/300"}
@@ -94,17 +96,17 @@ const ServicePage = () => {
 
               <div className="px-6 pt-4 pb-2"></div>
               <div className="px-6 pt-4 pb-2 flex justify-between">
-              {userRole === "admin" && ( // Check userRole to conditionally render buttons
+                {userRole === "admin" && ( // Check userRole to conditionally render buttons
                   <>
                     <button
                       onClick={() => handleUpdateClick(service._id)}
-                      className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 mr-2"
+                      className="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 mr-2"
                     >
                       Update
                     </button>
                     <button
                       onClick={() => handleDelete(service._id)}
-                      className="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-red-700"
+                      className="bg-red-700 text-white px-4 py-2 rounded-md hover:bg-red-700"
                     >
                       Delete
                     </button>
@@ -136,9 +138,9 @@ const ServicePage = () => {
           </div>
         )}
       </div>
-      <Footer/>
+      <Footer />
     </>
   );
 };
 
-export default ServicePage
+export default ServicePage;

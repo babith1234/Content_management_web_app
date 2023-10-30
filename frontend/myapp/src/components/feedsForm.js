@@ -3,9 +3,10 @@ import { useEffect } from "react";
 import Navbar from "./Navbar";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
 import Cookies from "js-cookie";
 import { useParams } from "react-router-dom";
+import logo from "../images/logo.png"
+
 const accessToken = Cookies.get("accessToken");
 
 const FeedForm = () => {
@@ -14,27 +15,25 @@ const FeedForm = () => {
     description: "",
   });
   const { feedId } = useParams();
-  console.log(feedId);
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false); // Loading state
 
   const fetchData = async () => {
     try {
       const response1 = await axios.get(
-        `http://localhost:4000/feeds?feedId=${feedId}`,{
+        `http://localhost:4000/feeds?feedId=${feedId}`,
+        {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         }
       );
       const existingfeedData = response1.data.data;
-      console.log(existingfeedData);
-      setFormData(...existingfeedData);
+      setFormData(existingfeedData);
     } catch (error) {
       console.error("Error fetching feed data:", error);
     }
   };
-
-  console.log(formData);
 
   useEffect(() => {
     if (feedId) {
@@ -44,12 +43,15 @@ const FeedForm = () => {
 
   const handleChange = (e) => {
     const value = e.target.type === "file" ? e.target.files[0] : e.target.value;
-
     setFormData({ ...formData, [e.target.name]: value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Set isLoading to true to show the loader
+    setIsLoading(true);
+
     try {
       const formDataForSubmit = new FormData();
       formDataForSubmit.append("image", formData.image);
@@ -75,33 +77,34 @@ const FeedForm = () => {
       }
     } catch (error) {
       console.error("Error submitting Feeds:", error);
+    } finally {
+      // Set isLoading back to false, whether the operation succeeds or fails
+      setIsLoading(false);
     }
   };
 
   return (
     <>
       <Navbar />
-      <div className="bg-gradient-to-r from-blue-400 to-purple-500 h-screen flex flex-col justify-center items-center">
-        {/* Circular component for company logo */}
-        <div className="bg-white rounded-full h-20 w-20 flex items-center justify-center mb-8">
-          <span role="img" aria-label="Company Logo" className="text-4xl">
-            🌐
-          </span>
+      <div className="bg-white h-screen flex flex-col justify-center items-center">
+        <div className="bg-white rounded-full h-20 w-80 flex items-center justify-center mb-8">
+        <img
+            src={logo}
+            alt="Company Image"
+            className="w-40 h-40 rounded-lg mb-4"
+          />
         </div>
-
-        {/* Heading */}
         <h1 className="text-4xl font-bold text-white mb-8">
           Create a new Feed
         </h1>
-
         <form
           onSubmit={handleSubmit}
-          className="bg-gradient-to-r from-blue-100 to-purple-400 p-8 rounded-md max-w-xl w-full md:w-3/4 lg:w-1/2 xl:w-3/4"
+          className="bg-crimson p-8 rounded-md max-w-xl w-full md:w-3/4 lg:w-1/2 xl:w-3/4"
         >
           <div className="mb-4">
             <label
               htmlFor="image"
-              className="block text-sm font-medium text-gray-600"
+              className="block text-sm font-medium text-white"
             >
               Image
             </label>
@@ -110,16 +113,14 @@ const FeedForm = () => {
               id="image"
               name="image"
               onChange={handleChange}
-              placeholder="yuygyug"
               className="mt-1 p-2 border border-gray-300 rounded-md w-full"
               required
             />
           </div>
-
           <div className="mb-4">
             <label
               htmlFor="description"
-              className="block text-sm font-medium text-gray-600"
+              className="block text-sm font-medium text-white"
             >
               Description
             </label>
@@ -132,14 +133,20 @@ const FeedForm = () => {
               required
             />
           </div>
-
           <div className="mt-4">
-            <button
-              className="bg-blue-500 hover:bg-cyan-600  text-white font-bold py-2 px-4 rounded-full shadow-2xl"
-              onClick={handleSubmit}
-            >
-              {feedId ? "Update" : "Submit"}
-            </button>
+            {isLoading ? (
+              <div className="text-center mt-4">
+                <div className="inline-block animate-spin ease-linear rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+                <span className="sr-only">Loading...</span>
+              </div>
+            ) : (
+              <button
+                className="bg-white text-crimson font-bold py-2 px-4 rounded-full shadow-2xl"
+                onClick={handleSubmit}
+              >
+                {feedId ? "Update" : "Submit"}
+              </button>
+            )}
           </div>
         </form>
       </div>

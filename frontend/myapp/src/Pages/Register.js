@@ -3,6 +3,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import axios from "axios";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 const Registration = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -12,6 +13,8 @@ const Registration = () => {
     password: "",
     profile_pic: null,
   });
+  const [isLoading, setIsLoading] = useState(false); // Loading state
+  const navigate= useNavigate()
 
   // Handle changes in form fields
   const handleInputChange = (e) => {
@@ -31,6 +34,8 @@ const Registration = () => {
   };
 
   const handleSubmit = async (e) => {
+    // Set isLoading to true to show the loader
+    setIsLoading(true);
     e.preventDefault();
 
     // Create a FormData object to handle file uploads
@@ -41,7 +46,6 @@ const Registration = () => {
     formDataToSend.append("email_id", formData.email_id);
     formDataToSend.append("password", formData.password);
     formDataToSend.append("profile_pic", formData.profile_pic);
-   
 
     try {
       const response = await axios.post(
@@ -51,15 +55,21 @@ const Registration = () => {
       // Handle the response as needed (e.g., show success message or redirect)
       console.log("Registration successful:", response.data);
       alert("User registered successfully");
+      navigate("/login")
     } catch (error) {
       console.error("Registration failed:", error);
+      
+    }
+    finally {
+      // Set isLoading back to false, whether the operation succeeds or fails
+      setIsLoading(false);
     }
   };
   return (
     <>
       <Navbar />
       <div className="bg-white min-h-screen flex items-center justify-center mt-10 ">
-        <div className="bg-crimson p-10 rounded shadow-outline shadow-2xl md:w-96 lg:w-1/3 w-full mb-6 mt-20 ">
+        <div className="bg-crimson p-10 rounded-xl shadow-black shadow-lg md:w-96 lg:w-1/3 w-full mb-6 mt-20 ">
           <h2 className="text-2xl font-bold mb-4 text-white">Register</h2>
 
           <div className="mb-4">
@@ -148,7 +158,7 @@ const Registration = () => {
               onChange={handleFileChange}
             />
           </div>
-
+         
           <div className="flex items-center justify-between mt-6">
             <button
               className="bg-white  text-crimson font-bold py-2 px-4 rounded-full shadow-2xl"

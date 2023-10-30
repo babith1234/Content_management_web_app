@@ -155,7 +155,7 @@ const LoginForm = () => {
       <Navbar />
       <div className="flex justify-center items-center h-screen">
         <form
-          className="w-96 bg-crimson p-6 rounded shadow-outline shadow-2xl
+          className="w-96 bg-crimson p-6 rounded-xl shadow-black shadow-lg
         "
         >
           <div className="mb-3 ">

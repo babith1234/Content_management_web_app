@@ -6,7 +6,7 @@ const ContactForm = () => {
   return (
     <>
     <Navbar/>
-    <div className="max-w-md mx-auto mt-10 p-6  bg-crimson p-6 rounded shadow-outline shadow-2xl mt-32 mb-10">
+    <div className="max-w-md mx-auto mt-10 p-6  bg-crimson rounded-xl shadow-black shadow-lg mt-32 mb-10">
       <h2 className="text-2xl font-semibold mb-6 text-white">Contact Us</h2>
       <form>
         <div className="mb-4">
@@ -50,7 +50,7 @@ const ContactForm = () => {
         </div>
         <button
           type="submit"
-          className="bg-white hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          className=" bg-white hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline bg-white"
         >
           Submit
         </button>

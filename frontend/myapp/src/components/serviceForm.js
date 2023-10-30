@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import Navbar from "./Navbar";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import logo from "../images/logo.png";
 
 import Cookies from "js-cookie";
 import { useParams } from "react-router-dom";
@@ -17,10 +18,13 @@ const ServiceForm = () => {
   const { serviceId } = useParams();
   const navigate = useNavigate();
 
+  const [isLoading, setIsLoading] = useState(false); // Loading state
+
   const fetchData = async () => {
     try {
       const response1 = await axios.get(
-        `http://localhost:4000/services?serviceId=${serviceId}`,{
+        `http://localhost:4000/services?serviceId=${serviceId}`,
+        {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
@@ -28,7 +32,7 @@ const ServiceForm = () => {
       );
       const existingServiceData = response1.data.data;
 
-      console.log(existingServiceData)
+      console.log(existingServiceData);
       setFormData(existingServiceData);
     } catch (error) {
       console.error("Error fetching service data:", error);
@@ -49,6 +53,10 @@ const ServiceForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Set isLoading to true to show the loader
+    setIsLoading(true);
+
     try {
       const formDataForSubmit = new FormData();
       formDataForSubmit.append("service_image", formData.service_image);
@@ -75,36 +83,42 @@ const ServiceForm = () => {
         });
         console.log("Service submitted successfully");
         alert("Service submitted successfully");
+        navigate("/services");
       }
     } catch (error) {
-      console.error("Error submitting project:", error);
+      console.error("Error submitting service:", error);
+    } finally {
+      // Set isLoading back to false, whether the operation succeeds or fails
+      setIsLoading(false);
     }
   };
 
   return (
     <>
       <Navbar />
-      <div className="bg-gradient-to-r from-blue-400 to-purple-500 h-screen flex flex-col justify-center items-center">
+      <div className="bg-white h-screen flex flex-col justify-center items-center">
         {/* Circular component for company logo */}
-        <div className="bg-white rounded-full h-20 w-20 flex items-center justify-center mb-8">
-          <span role="img" aria-label="Company Logo" className="text-4xl">
-            🌐
-          </span>
+        <div className="bg-white rounded-full h-20 w-80 flex items-center justify-center mb-8">
+          <img
+            src={logo}
+            alt="Company Image"
+            className="w-40 h-40 rounded-lg mb-4"
+          />
         </div>
 
         {/* Heading */}
-        <h1 className="text-4xl font-bold text-white mb-8">
+        <h1 className="text-4xl font-bold text-crimson mb-8">
           Enter Service Details
         </h1>
 
         <form
           onSubmit={handleSubmit}
-          className="bg-gradient-to-r from-blue-100 to-purple-400 p-8 rounded-md max-w-xl w-full md:w-3/4 lg:w-1/2 xl:w-3/4"
+          className="bg-crimson p-8 rounded-md max-w-xl w-full md:w-3/4 lg:w-1/2 xl:w-3/4"
         >
           <div className="mb-4">
             <label
               htmlFor="service_image"
-              className="block text-sm font-medium text-gray-600"
+              className="block text-sm font-medium text-white"
             >
               Service Image
             </label>
@@ -121,7 +135,7 @@ const ServiceForm = () => {
           <div className="mb-4">
             <label
               htmlFor="service_name"
-              className="block text-sm font-medium text-gray-600"
+              className="block text-sm font-medium text-white"
             >
               Service Name
             </label>
@@ -139,7 +153,7 @@ const ServiceForm = () => {
           <div className="mb-4">
             <label
               htmlFor="service_description"
-              className="block text-sm font-medium text-gray-600"
+              className="block text-sm font-medium text-white"
             >
               Service Description
             </label>
@@ -154,12 +168,19 @@ const ServiceForm = () => {
           </div>
 
           <div className="mt-4">
-            <button
-              className="bg-blue-500 hover:bg-cyan-600  text-white font-bold py-2 px-4 rounded-full shadow-2xl"
-              onClick={handleSubmit}
-            >
-              {serviceId ? "Update" : "Submit"}
-            </button>
+            {isLoading ? (
+              <div className="text-center mt-4">
+                <div className="inline-block animate-spin ease-linear rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+                <span className="sr-only">Loading...</span>
+              </div>
+            ) : (
+              <button
+                className="bg-white hover:bg-cyan-600  text-crimson font-bold py-2 px-4 rounded-full shadow-2xl"
+                onClick={handleSubmit}
+              >
+                {serviceId ? "Update" : "Submit"}
+              </button>
+            )}
           </div>
         </form>
       </div>

@@ -28,7 +28,7 @@ function Navbar() {
     <header className="top-0 left-0 right-0 z-50 bg-crimson text-white p-2 flex items-center w-screen h-20">
       <div className="container mx-auto flex justify-between items-center">
       <div className="flex items-center space-x-4">
-          <img src={logo} alt="Company Logo" width="70" height="60" />{/* Use your image here */}
+          <img src={logo} alt="Company Logo" width="90" height="70" />{/* Use your image here */}
         </div>
         <button
           className="sm:hidden text-white hover:text-gray-200"
@@ -214,7 +214,7 @@ function Navbar() {
         {accessToken ? (
           <li>
             <button
-              className="bg-white  hover:bg-cyan-600 text-crimson font-bold py-2 px-4 rounded-full shadow-2xl"
+              className="bg-white hover:bg-cyan-600 text-crimson font-bold py-2 px-4 rounded-full shadow-2xl"
               onClick={handleLogout}
             >
               Logout

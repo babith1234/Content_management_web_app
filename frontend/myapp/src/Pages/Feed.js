@@ -75,7 +75,7 @@ const FeedsPage = () => {
           {feeds.map((feed) => (
             <div
               key={feed._id}
-              className="max-w-sm rounded overflow-hidden shadow-lg bg-crimson  transform hover:scale-105 transition-transform"
+              className="max-w-sm rounded overflow-hidden  shadow-black shadow-lg bg-crimson  transform hover:scale-105 transition-transform"
             >
               <img
                 src={feed.image || "https://via.placeholder.com/300"}
