@@ -139,7 +139,7 @@ const SuperAdminPage = () => {
                 className="bg-white text-crimson font-bold py-2 px-4 rounded-full shadow-2xl ml-4"
                 onClick={handleLogout}
               >
-                Logout
+                Logout1
               </button>
             </div>
           </div>
