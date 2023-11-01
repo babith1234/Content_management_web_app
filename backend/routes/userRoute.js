@@ -16,7 +16,7 @@ router.post("/login",userController.loginUser)
 router.post("/logout",userController.logoutController)
 router.get("/user",authenticateMiddleware,userController.getUser)
 router.get("/users",userController.getAllusers)
-
+router.get("/user",)
 
 // PROJECT CREATION, DISPLAY, DELETE, UPDATE ROUTE
 router.post("/projects", authenticateMiddleware,upload.single('project_image'), projectController.createProject);

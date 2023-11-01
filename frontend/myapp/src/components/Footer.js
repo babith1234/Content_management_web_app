@@ -6,17 +6,18 @@ function Footer() {
     <footer className=" bg-crimson bg-opacity-90 text-white p-8">
       <div className="container mx-auto flex flex-wrap justify-between">
         {/* First Section: Company Image and Description */}
-        <div className="mb-6 md:mb-0 w-full md:w-1/4">
+        <div className=" mb-6 md:mb-0 w-full md:w-1/4">
           <img
             src={logo}
             alt="Company Image"
-            className="w-40 h-40 rounded-lg mb-4"
+            className=" ml-8 w-40 h-40 rounded-lg mb-4"
           />
-          <p>
+          <p >
             We are a leading company dedicated to providing high-quality
             services and products.
           </p>
         </div>
+        
 
         {/* Second Section: Company Address and Phone Number */}
         <div className="w-full md:w-1/4">

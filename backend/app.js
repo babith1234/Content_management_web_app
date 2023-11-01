@@ -3,8 +3,10 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
-
 const routes = require("./routes/userRoute");
+//this is done by ninad
+
+
 
 dotenv.config();
 
@@ -34,3 +36,8 @@ app.use("/", routes);
 app.listen(port, () => {
   console.log(`server running at ${port}`);
 });
+
+
+//this is done by ninad
+
+
