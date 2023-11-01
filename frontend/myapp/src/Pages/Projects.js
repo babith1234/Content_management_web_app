@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+
+import React, { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import { Link } from "react-router-dom";
-import Footer from "../components/Footer"
- 
-import { useEffect } from "react";
+import Footer from "../components/Footer";
 import Axios from "axios";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
@@ -14,8 +13,7 @@ const ProjectsPage = () => {
   const navigate = useNavigate();
 
   const accessToken = Cookies.get("accessToken");
-
-  let userRole = "user"; // Default role for cases where the token is invalid or doesn't contain a role
+  let userRole = "user";
 
   // Decode the access token to get user information
   try {
@@ -23,9 +21,7 @@ const ProjectsPage = () => {
     userRole = decodedToken.role || userRole;
   } catch (error) {
     if (error instanceof InvalidTokenError) {
-      // Handle the case where the token is invalid
       console.error("Invalid access token:", error);
-      // You can add further error handling logic here if needed.
     }
   }
 
@@ -68,17 +64,18 @@ const ProjectsPage = () => {
     navigate(`/projects/${projectId}/update`);
   };
 
-
   return (
-    <>
+    <div className="flex flex-col min-h-screen">
       <Navbar />
-      <div className="container mx-auto  bg-white p-10 h-screen">
-        <h1 className="text-3xl font-bold mb-4 text-center text-crimson">PROJECTS</h1>
+      <div className="container mx-auto bg-white p-10 bg-gradient-to-r from-red-100 to-red-400 flex-grow">
+        <h1 className="text-3xl font-minimal font-bold mb-4 text-center text-white">
+          PROJECTS
+        </h1>
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-9">
           {projects.map((project) => (
             <div
               key={project._id}
-              className="max-w-sm rounded-xl overflow-hidden  shadow-black shadow-lg bg-crimson transform hover:scale-105 transition-transform"
+              className="max-w-sm rounded-xl overflow-hidden shadow-black shadow-lg bg-crimson transform hover:scale-105 transition-transform"
             >
               <img
                 src={project.project_image || "https://via.placeholder.com/300"}
@@ -95,7 +92,7 @@ const ProjectsPage = () => {
               </div>
               <div className="px-6 pt-4 pb-2"></div>
               <div className="px-6 pt-4 pb-2 flex justify-between">
-                {userRole === "admin" && ( // Check userRole to conditionally render buttons
+                {userRole === "admin" && (
                   <>
                     <button
                       onClick={() => handleUpdateClick(project._id)}
@@ -115,7 +112,7 @@ const ProjectsPage = () => {
             </div>
           ))}
         </div>
-        {userRole === "admin" && ( // Check userRole to conditionally render the "Upload" button
+        {userRole === "admin" && (
           <div className="flex justify-end mt-8">
             <label htmlFor="project_image_input" className="cursor-pointer">
               <Link to="/projectform">
@@ -137,9 +134,10 @@ const ProjectsPage = () => {
           </div>
         )}
       </div>
-      <Footer/>
-    </>
+      <Footer />
+    </div>
   );
 };
 
 export default ProjectsPage;
+

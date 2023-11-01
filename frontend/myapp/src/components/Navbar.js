@@ -25,7 +25,7 @@ function Navbar() {
   };
 
   return (
-    <header className="top-0 left-0 right-0 z-50 bg-crimson text-white p-2 flex items-center w-screen h-20">
+    <header className="top-0 left-0 right-0 z-50 bg-crimson  hover:opacity-80 text-white p-2 flex items-center w-screen h-20 transition transform hover:-translate-y-1 motion-reduce:transition-none motion-reduce:hover:transform-none rounded-b">
       <div className="container mx-auto flex justify-between items-center">
       <div className="flex items-center space-x-4">
           <img src={logo} alt="Company Logo" width="90" height="70" />{/* Use your image here */}
@@ -69,7 +69,7 @@ function Navbar() {
         </button>
       </div>
       {isMenuOpen && (
-        <div className="fixed top-0 left-0 w-full h-screen bg-crimson text-white text-center pt-20">
+        <div className="fixed top-0 left-0 w-full h-screen bg-crimson text-white text-center pt-20 ">
           <button
             className="text-xl hover:text-gray-200 absolute top-4 left-4"
             onClick={closeMenu}
@@ -77,7 +77,7 @@ function Navbar() {
           >
             &#8599;
           </button>
-          <ul className="space-y-4">
+          <ul className="space-y-4 z-50 ">
             <li>
               <a
                 className="text-white text-3xl hover:text-gray-200 hover:underline font-serif"

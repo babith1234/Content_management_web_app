@@ -93,7 +93,7 @@ const TestimonialForm = () => {
   return (
     <>
       <Navbar />
-      <div className="bg-white h-screen flex flex-col justify-center items-center">
+      <div className="bg-gradient-to-r from-red-100 to-red-400 h-screen flex flex-col justify-center items-center">
         <div className="bg-white rounded-full h-20 w-80 flex items-center justify-center mb-8">
         <img
             src={logo}
