@@ -1,3 +1,4 @@
+
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
@@ -6,8 +7,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { Link } from "react-router-dom";
-
-// import { useAuth } from "../components/Auth/auth";
+import vr from "../images/vr.png"
 
 const LoginForm = () => {
   const [email_id, setEmail] = useState("");
@@ -41,8 +41,6 @@ const LoginForm = () => {
       console.error("Error fetching user role:", error);
     }
   };
-
-  // const { login, userID } = useAuth();
 
   const handleSubmit = async (e) => {
     const newUser = {
@@ -80,11 +78,16 @@ const LoginForm = () => {
     <>
       <Navbar />
       <div className="flex justify-center items-center bg-gradient-to-r from-red-100 to-red-400 h-screen">
+        {/* Display the image above the form on mobile view */}
+        <img
+          src={vr}
+          alt="nothing"
+          className="hidden sm:block max-w-md mb-64 mr-60"
+        />
         <form
-          className="w-96 bg-crimson p-6 rounded-xl shadow-black shadow-lg
-        "
+          className="w-full m-5 sm:w-96 bg-crimson p-6 rounded-xl shadow-black shadow-lg mb-20"
         >
-          <div className="mb-3 ">
+          <div className="mb-3">
             <label className="font-monospace font-bold mb-2 flex text-white">Email</label>
             <input
               type="email"
@@ -114,16 +117,16 @@ const LoginForm = () => {
             <span className=" text-white font-handwriting ">Forgot password?</span>
           </div>
           <button
-            className="block bg-white text-crimson  hover:bg-blue-500 w-full py-2 px rounded"
+            className="block bg-white text-crimson  hover:bg-green-500 w-full py-2 px rounded"
             onClick={handleSubmit}
           >
             Login
           </button>
           <Link to="/register">
-          <div className="mt-4 text-center">
-            Don't have an account yet?
-            <span className="text-white cursor-pointer">Register</span>
-          </div>
+            <div className="mt-4 text-center">
+              Don't have an account yet?
+              <span className="text-white cursor-pointer">Register</span>
+            </div>
           </Link>
         </form>
       </div>
@@ -133,3 +136,4 @@ const LoginForm = () => {
 };
 
 export default LoginForm;
+

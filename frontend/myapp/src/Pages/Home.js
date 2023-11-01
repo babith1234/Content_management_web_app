@@ -10,8 +10,9 @@ import Footer from "../components/Footer"
 const HomePage = () => {
   return (
     <>
-    <Navbar/>
+    
     <div className="grid  grid-cols-12">
+    <Navbar/>
       {/* Profile section */}
       <div className="col-span-full ">
         <Profile />

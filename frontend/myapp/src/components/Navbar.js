@@ -69,7 +69,7 @@ function Navbar() {
         </button>
       </div>
       {isMenuOpen && (
-        <div className="fixed top-0 left-0 w-full h-screen bg-crimson text-white text-center pt-20">
+        <div className="fixed top-0 left-0 w-full h-screen bg-crimson text-white text-center pt-20 ">
           <button
             className="text-xl hover:text-gray-200 absolute top-4 left-4"
             onClick={closeMenu}
@@ -77,7 +77,7 @@ function Navbar() {
           >
             &#8599;
           </button>
-          <ul className="space-y-4">
+          <ul className="space-y-4 z-50 ">
             <li>
               <a
                 className="text-white text-3xl hover:text-gray-200 hover:underline font-serif"

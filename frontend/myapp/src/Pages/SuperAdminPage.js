@@ -61,65 +61,7 @@ const SuperAdminPage = () => {
     // Navigate to the login page
     navigate("/login");
   };
-  //   return (
-  //     <>
-  //       <div className="bg-crimson">
-  //         <div className="container mx-auto p-4">
-  //           <div className="md:flex items-center justify-between py-4">
-  //             <h1 className="text-2xl text-white md:text-5xl flex-1 text-center md:text-left">
-  //               SUPER ADMIN PANEL
-  //             </h1>
-  //             <img
-  //             src={logo}
-  //             alt="Company Image"
-  //             className="w-40 h-40 rounded-lg mb-4"
-  //           />
-  //             <button
-  //               className="bg-white text-crimson font-bold py-2 px-4 rounded-full shadow-2xl"
-  //               onClick={handleLogout}
-  //             >
-  //               Logout
-  //             </button>
-  //           </div>
-  //         </div>
-  //       </div>
-  //       <div className="min-h-screen bg-crimson">
-  //         <div className="container mx-auto p-4">
-  //           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-8 mt-10 mb-10">
-  //             {users.map((user) => (
-  //               <div
-  //                 key={user._id}
-  //                 className="relative flex flex-col items-center justify-center p-4 bg-white rounded shadow-lg transform transition duration-300 ease-in-out hover:scale-105 hover-bg-gray-100"
-  //               >
-  //                 <img
-  //                   src={user.profile_pic}
-  //                   alt={user.name}
-  //                   className="object-cover w-full h-48 rounded mb-4"
-  //                 />
-  //                 <h3 className="text-xl font-semibold mb-2">{user.name}</h3>
-  //                 <p className="text-gray-700">{user.role}</p>
-  //                 <div className="mt-4">
-  //                   <button
-  //                     className="mr-2 px-4 py-2 text-white bg-green-500 rounded hover:bg-green-600"
-  //                     onClick={() => handlePromote(user._id)}
-  //                   >
-  //                     Promote
-  //                   </button>
-  //                   <button
-  //                     className="px-4 py-2 text-white bg-red-500 rounded hover:bg-red-600"
-  //                     onClick={() => handleDemote(user._id)}
-  //                   >
-  //                     Demote
-  //                   </button>
-  //                 </div>
-  //               </div>
-  //             ))}
-  //           </div>
-  //         </div>
-  //       </div>
-  //     </>
-  //   );
-  // };
+ 
 
   return (
     <>
@@ -139,7 +81,7 @@ const SuperAdminPage = () => {
                 className="bg-white text-crimson font-bold py-2 px-4 rounded-full shadow-2xl ml-4"
                 onClick={handleLogout}
               >
-                Logout1
+                Logout
               </button>
             </div>
           </div>

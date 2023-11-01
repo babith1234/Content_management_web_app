@@ -15,6 +15,7 @@ import TestimonialPage from "./Pages/Testimonial";
 import FeedsPage from "./Pages/Feed";
 import FeedForm from "./components/feedsForm";
 import SuperAdminPage from "./Pages/SuperAdminPage";
+import ContactList from "./Pages/contacts";
 
 function App() {
   return (
@@ -47,6 +48,8 @@ function App() {
           <Route path="/feeds/:feedId/update" element={<FeedForm />} />
 
           <Route path="/superAdmin" element={<SuperAdminPage />}></Route>
+
+          <Route path="/contactspage" element={<ContactList />}></Route>
         </Routes>
       </BrowserRouter>
     </>
