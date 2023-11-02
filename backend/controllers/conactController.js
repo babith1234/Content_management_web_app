@@ -3,6 +3,7 @@ const contactModel = require("../models/contactModel");
 // Controller function to handle contact form submissions
 const submitContactForm = async (req, res) => {
   try {
+    const userId = req.user.user_id;
     // Extract contact form data from the request body
     const formData = req.body;
 
@@ -15,6 +16,7 @@ const submitContactForm = async (req, res) => {
 
     // Create a new contact document and save it to the contact_collection
     const newContact = await contactModel.create({
+      user: userId,
       ...formData,
     });
 
@@ -24,7 +26,6 @@ const submitContactForm = async (req, res) => {
       data: newContact,
     });
   } catch (err) {
-    
     console.error(err);
     return res
       .status(500)
@@ -32,10 +33,13 @@ const submitContactForm = async (req, res) => {
   }
 };
 
-        //DISPLAY CONTACT FORM
+//DISPLAY CONTACT FORM
 const displayForm = async (req, res) => {
   try {
-    const contactData = await contactModel.find();
+    const userId = req.user.user_id;
+    const contactData = await contactModel.find({
+      user: userId,
+    });
 
     if (!contactData) {
       return res.status(401).send({
@@ -53,8 +57,7 @@ const displayForm = async (req, res) => {
   }
 };
 
-
 module.exports = {
   submitContactForm,
-  displayForm
+  displayForm,
 };

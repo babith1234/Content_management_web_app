@@ -25,8 +25,8 @@ router.delete("/projects",projectController.deleteProject)
 router.put("/projects",upload.single('project_image'),projectController.updateProject)
 
 // CONTACT FORM 
-router.post("/contacts",contactController.submitContactForm)
-router.get("/contacts",contactController.displayForm) 
+router.post("/contacts",authenticateMiddleware,contactController.submitContactForm)
+router.get("/contacts",authenticateMiddleware,contactController.displayForm) 
 
 // FEEDS CREATION, DISPLAY, DELETE, UPDATE ROUTE
 router.post("/feeds",authenticateMiddleware,upload.single('image'),feedController.createFeeds)
@@ -48,7 +48,6 @@ router.post('/testimonial',authenticateMiddleware,upload.single('client_image'),
 router.get('/testimonial', authenticateMiddleware,testimonialController.getTestimonials);
 router.delete('/testimonial', testimonialController.deleteTestimonial);
 router.put('/testimonial',upload.single('client_image'), testimonialController.updateTestimonial)
-
 
 module.exports=router
 

@@ -11,15 +11,15 @@ const contactSchema = new mongoose.Schema({
     trim: true,
     required: true,
   },
-  phone_number:{
-    type:Number,
-    trim:true,
-    required:true
-  },
+
   message: {
     type: String,
     trim: true,
     required: true,
+  },
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'users',
   },
 });
 

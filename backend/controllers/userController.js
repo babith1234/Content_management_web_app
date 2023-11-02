@@ -108,11 +108,11 @@ const loginUser = async (req, res) => {
     }
 
     // If email and password are valid, create a JWT access token and a refresh token
-      const accessTokenPayload = {
-        user_id: userData.id,
-        role: userData.role,
-        exp: Math.floor(Date.now() / 1000) + 3600, // Set expiration time to 1 hour from now
-      };
+    const accessTokenPayload = {
+      user_id: userData.id,
+      role: userData.role,
+      exp: Math.floor(Date.now() / 1000) + 3600, // Set expiration time to 1 hour from now
+    };
 
     const refreshTokenPayload = {
       user_id: userData.id,
@@ -198,7 +198,6 @@ const updateUser = async (req, res) => {
   try {
     // Extract user ID from the request parameters or body
     const userId = req.query.id;
-
     const userData = req.body;
     const newImageFile = req.file;
 
@@ -213,6 +212,7 @@ const updateUser = async (req, res) => {
     const updatedFields = {
       ...userData,
     };
+
     if (newImageFile) {
       // Retrieve the existing image key from the database
       const existingUser = await userModel.findById(userId);
@@ -229,21 +229,36 @@ const updateUser = async (req, res) => {
       // Generate a pre-signed URL for the new image
       const newImageURL = generatePublicPresignedUrl(newImageFile.key);
 
-      // Update the project data to include the new image URL
+      // Update the user data to include the new image URL
       userData.profile_pic = newImageURL;
     }
+
     // Filter out undefined values to avoid setting them to null in the update
-    const filteredFields = Object.fromEntries(
-      Object.entries(updatedFields).filter(
-        ([key, value]) => value !== undefined
-      )
-    );
+    // const filteredFields = Object.fromEntries(
+    //   Object.entries(updatedFields).filter(
+    //     ([key, value]) => value !== undefined
+    //   )
+    // );
+
+    // Construct an update object with only provided fields
+    const updateObject = {};
+    for (const key in userData) {
+      if (userData[key] !== undefined) {
+        updateObject[key] = userData[key];
+      }
+    }
 
     // Update the user document in the user_collection
+    // const updatedUser = await userModel.findByIdAndUpdate(
+    //   userId,
+    //   { $set: filteredFields },
+    //   { new: true } // Return the updated document
+    // );
+
     const updatedUser = await userModel.findByIdAndUpdate(
       userId,
-      { $set: filteredFields },
-      { new: true } // Return the updated document
+      updateObject,
+      { new: true }
     );
 
     // Check if the user was found and updated
@@ -300,5 +315,5 @@ module.exports = {
   logoutController,
   blacklistedTokens,
   getUser,
-  getAllusers
+  getAllusers,
 };

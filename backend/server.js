@@ -31,6 +31,11 @@ mongoose
 
 app.use("/", routes);
 
+app.get("/ping",(req,res)=>{
+  res.send("pong")
+})
+
+
 app.listen(port, () => {
   console.log(`server running at ${port}`);
 });
