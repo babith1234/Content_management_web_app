@@ -16,6 +16,7 @@ import FeedsPage from "./Pages/Feed";
 import FeedForm from "./components/feedsForm";
 import SuperAdminPage from "./Pages/SuperAdminPage";
 import ContactList from "./Pages/contacts";
+import Userupdate from "./components/userUpdate";
 
 function App() {
   return (
@@ -50,6 +51,8 @@ function App() {
           <Route path="/superAdmin" element={<SuperAdminPage />}></Route>
 
           <Route path="/contactspage" element={<ContactList />}></Route>
+
+          <Route path="/user/:userId/update" element={<Userupdate />} />
         </Routes>
       </BrowserRouter>
     </>

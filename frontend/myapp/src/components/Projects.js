@@ -30,7 +30,7 @@ const Projects = () => {
       <div className="grid grid-cols-1  sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {projects.map((project) => (
           <div
-            key={project._id} 
+            key={project._id}
             className="bg-crimson bg-opacity-70 p-4 rounded-xl shadow-black shadow-lg hover:shadow-lg transition-transform transform hover:scale-105 hover:border-gray-900 border-2 border-transparent cursor-pointer"
           >
             <img
@@ -41,11 +41,14 @@ const Projects = () => {
             <h2 className="text-xl text-white font-semibold mb-2">
               {project.project_name}
             </h2>
-            <p className="text-white-600 mb-4 text-white">{project.project_description}</p>
-           
+            <p className="text-white-600 mb-4 text-white">
+              {project.project_description}
+            </p>
           </div>
         ))}
+          
       </div>
+    
     </div>
   );
 };

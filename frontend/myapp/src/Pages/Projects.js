@@ -116,7 +116,7 @@ const ProjectsPage = () => {
           <div className="flex justify-end mt-8">
             <label htmlFor="project_image_input" className="cursor-pointer">
               <Link to="/projectform">
-                <button className="bg-crimson text-gray-800 text-white font-bold rounded border-b-2 border-green-500 hover:border-green-900 hover:bg-green-900 hover:text-white shadow-md py-3 px-8 inline-flex items-center">
+                <button className="bg-crimson  text-white font-bold rounded border-b-2 border-green-500 hover:border-green-900 hover:bg-green-900 hover:text-white shadow-md py-3 px-8 inline-flex items-center">
                   <svg
                     fill="#FFF"
                     height="18"
