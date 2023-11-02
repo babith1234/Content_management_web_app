@@ -92,7 +92,7 @@ function Navbar() {
                 href="/projects"
                 onClick={closeMenu}
               >
-                Projects
+                Projectss
               </a>
             </li>
             <li>
