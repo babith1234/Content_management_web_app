@@ -9,7 +9,7 @@ const Testimonial = () => {
 
   useEffect(() => {
     // Fetch testimonial data from your API endpoint
-    Axios.get("http://localhost:4000/testimonial", {
+    Axios.get("https://roltixsitenew-git-master-jsninad.vercel.app/testimonial", {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },

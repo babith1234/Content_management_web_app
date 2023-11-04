@@ -8,7 +8,7 @@ const Projects = () => {
 
   useEffect(() => {
     // Fetch project data from your API endpoint
-    Axios.get("http://localhost:4000/projects", {
+    Axios.get("https://roltixsitenew-git-master-jsninad.vercel.app/projects", {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
