@@ -130,7 +130,7 @@ const LoginForm = () => {
             className="block bg-white text-crimson  hover:bg-green-500 w-full py-2 px rounded"
             onClick={handleSubmit}
           >
-            Login
+            Login .
           </button>
           <Link to="/register">
             <div className="mt-4 text-center">
