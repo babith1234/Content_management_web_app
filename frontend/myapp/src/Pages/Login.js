@@ -1,4 +1,3 @@
-
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
@@ -7,7 +6,8 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { Link } from "react-router-dom";
-import vr from "../images/vr.png"
+import vr from "../images/vr.png";
+import API_ENDPOINT from "../config";
 
 const LoginForm = () => {
   const [email_id, setEmail] = useState("");
@@ -19,12 +19,15 @@ const LoginForm = () => {
     const accessToken = Cookies.get("accessToken");
     console.log(accessToken);
     try {
-      const response = await axios.get("http://localhost:4000/user", {
-        // You may need to include headers for authentication
-        headers: {
-          Authorization: `Bearer ${accessToken}`, // Your authentication token
-        },
-      });
+      const response = await axios.get(
+        "https://roltixsitenew-git-master-jsninad.vercel.app/user",
+        {
+          // You may need to include headers for authentication
+          headers: {
+            Authorization: `Bearer ${accessToken}`, // Your authentication token
+          },
+        }
+      );
       console.log(response.data);
       console.log(response.data.data.role);
       const role = response.data.data.role;
@@ -51,7 +54,10 @@ const LoginForm = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post("http://localhost:4000/login", newUser);
+      const response = await axios.post(
+        "https://roltixsitenew-git-master-jsninad.vercel.app/login",
+        newUser
+      );
 
       const accessToken = response.data.authToken;
       console.log(accessToken);
@@ -59,7 +65,7 @@ const LoginForm = () => {
       // Store the accessToken in a cookie
       document.cookie = `accessToken=${accessToken}; path=/; secure; samesite=Lax`;
 
-      checkRole();
+      await checkRole();
       console.log("User logged in successfully");
     } catch (error) {
       console.error("Login failed:", error.response);
@@ -84,11 +90,11 @@ const LoginForm = () => {
           alt="nothing"
           className="hidden sm:block max-w-md mb-64 mr-60"
         />
-        <form
-          className="w-full m-5 sm:w-96 bg-crimson p-6 rounded-xl shadow-black shadow-lg mb-20"
-        >
+        <form className="w-full m-5 sm:w-96 bg-crimson p-6 rounded-xl shadow-black shadow-lg mb-20">
           <div className="mb-3">
-            <label className="font-monospace font-bold mb-2 flex text-white">Email</label>
+            <label className="font-monospace font-bold mb-2 flex text-white">
+              Email
+            </label>
             <input
               type="email"
               placeholder="Enter your email"
@@ -99,7 +105,9 @@ const LoginForm = () => {
             />
           </div>
           <div className="mb-3">
-            <label className=" mb-2 font-monospace font-bold flex  text-white">Password</label>
+            <label className=" mb-2 font-monospace font-bold flex  text-white">
+              Password
+            </label>
             <input
               type="password"
               placeholder="Enter your password"
@@ -114,7 +122,9 @@ const LoginForm = () => {
               <input type="checkbox" className="mr-2" />
               Remember me
             </label>
-            <span className=" text-white font-handwriting ">Forgot password?</span>
+            <span className=" text-white font-handwriting ">
+              Forgot password?
+            </span>
           </div>
           <button
             className="block bg-white text-crimson  hover:bg-green-500 w-full py-2 px rounded"
@@ -136,4 +146,3 @@ const LoginForm = () => {
 };
 
 export default LoginForm;
-

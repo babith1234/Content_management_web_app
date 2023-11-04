@@ -31,9 +31,9 @@ mongoose
 
 app.use("/", routes);
 
-app.get("/ping",(req,res)=>{
-  res.send("pong")
-})
+// app.get("/ping",(req,res)=>{
+//   res.send("pong")
+// })
 
 
 app.listen(port, () => {
