@@ -11,7 +11,7 @@ const ContactList = () => {
   useEffect(() => {
     // Fetch contact form data from your API endpoint
     axios
-      .get("http://localhost:4000/contacts", {
+      .get("https://roltixsitenew-git-master-jsninad.vercel.app/contacts", {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },

@@ -198,7 +198,7 @@ const TestimonialPage = () => {
 
   const getTestimonials = async () => {
     try {
-      const response = await Axios.get("http://localhost:4000/testimonial", {
+      const response = await Axios.get("https://roltixsitenew-git-master-jsninad.vercel.app/testimonial", {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -213,7 +213,7 @@ const TestimonialPage = () => {
   const handleDelete = async (testimonialId) => {
     try {
       const response = await Axios.delete(
-        `http://localhost:4000/testimonial?id=${testimonialId}`
+        `https://roltixsitenew-git-master-jsninad.vercel.app/testimonial?id=${testimonialId}`
       );
       const deletedTestimonial = response.data.deleted_testimonial;
       alert(`${deletedTestimonial.client_name} deleted successfully`);

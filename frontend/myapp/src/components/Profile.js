@@ -39,7 +39,7 @@ const Profile = () => {
   useEffect(() => {
     console.log(accessToken);
     axios
-      .get("http://localhost:4000/user", {
+      .get("https://roltixsitenew-git-master-jsninad.vercel.app/user", {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },

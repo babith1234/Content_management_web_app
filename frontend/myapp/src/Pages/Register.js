@@ -53,7 +53,7 @@ const Registration = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:4000/register",
+        "https://roltixsitenew-git-master-jsninad.vercel.app/register",
         formDataToSend
       );
       // Handle the response as needed (e.g., show success message or redirect)

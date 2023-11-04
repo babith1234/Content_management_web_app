@@ -180,7 +180,7 @@ const ServicePage = () => {
 
   const getServices = async () => {
     try {
-      const response = await Axios.get("http://localhost:4000/services", {
+      const response = await Axios.get("https://roltixsitenew-git-master-jsninad.vercel.app/services", {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -195,7 +195,7 @@ const ServicePage = () => {
   const handleDelete = async (serviceId) => {
     try {
       const response = await Axios.delete(
-        `http://localhost:4000/services?id=${serviceId}`
+        `https://roltixsitenew-git-master-jsninad.vercel.app/services?id=${serviceId}`
       );
       const deletedservice = response.data.deleted_service;
       alert(`${deletedservice.service_name} deleted successfully`);

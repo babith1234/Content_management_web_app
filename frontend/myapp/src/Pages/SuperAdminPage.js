@@ -12,7 +12,7 @@ const SuperAdminPage = () => {
   useEffect(() => {
     // Fetch user data from your API
     axios
-      .get("http://localhost:4000/users")
+      .get("https://roltixsitenew-git-master-jsninad.vercel.app/users")
       .then((response) => {
         // Update the 'users' state with the fetched data
         setUsers(response.data.data);
@@ -25,7 +25,7 @@ const SuperAdminPage = () => {
   const handlePromote = (userId) => {
     // Make an API request to update the user's role to "admin"
     axios
-      .put(`http://localhost:4000/users?id=${userId}`, { role: "admin" })
+      .put(`https://roltixsitenew-git-master-jsninad.vercel.app/users?id=${userId}`, { role: "admin" })
       .then((response) => {
         // Update the user's role in the local state
         const updatedUsers = users.map((user) =>
@@ -41,7 +41,7 @@ const SuperAdminPage = () => {
   const handleDemote = (userId) => {
     // Make an API request to update the user's role to "user"
     axios
-      .put(`http://localhost:4000/users?id=${userId}`, { role: "user" })
+      .put(`https://roltixsitenew-git-master-jsninad.vercel.app/users?id=${userId}`, { role: "user" })
       .then((response) => {
         // Update the user's role in the local state
         const updatedUsers = users.map((user) =>

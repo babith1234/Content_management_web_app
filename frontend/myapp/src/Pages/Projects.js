@@ -31,7 +31,7 @@ const ProjectsPage = () => {
 
   const getProjects = async () => {
     try {
-      const response = await Axios.get("http://localhost:4000/projects", {
+      const response = await Axios.get("https://roltixsitenew-git-master-jsninad.vercel.app/projects", {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -46,7 +46,7 @@ const ProjectsPage = () => {
   const handleDelete = async (projectId) => {
     try {
       const response = await Axios.delete(
-        `http://localhost:4000/projects?id=${projectId}`
+        `https://roltixsitenew-git-master-jsninad.vercel.app/projects?id=${projectId}`
       );
       const deletedProject = response.data.deleted_project;
       alert(`${deletedProject.project_name} deleted successfully`);

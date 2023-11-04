@@ -23,7 +23,7 @@ const ServiceForm = () => {
   const fetchData = async () => {
     try {
       const response1 = await axios.get(
-        `http://localhost:4000/services?serviceId=${serviceId}`,
+        `https://roltixsitenew-git-master-jsninad.vercel.app/services?serviceId=${serviceId}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -68,7 +68,7 @@ const ServiceForm = () => {
 
       if (serviceId) {
         const response = await axios.put(
-          `http://localhost:4000/services?id=${serviceId}`,
+          `https://roltixsitenew-git-master-jsninad.vercel.app/services?id=${serviceId}`,
           formDataForSubmit
         );
 
@@ -76,7 +76,7 @@ const ServiceForm = () => {
         alert("Updated successfully");
         navigate("/services");
       } else {
-        await axios.post("http://localhost:4000/services", formDataForSubmit, {
+        await axios.post("https://roltixsitenew-git-master-jsninad.vercel.app/services", formDataForSubmit, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
