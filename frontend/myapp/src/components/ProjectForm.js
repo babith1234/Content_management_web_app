@@ -94,7 +94,7 @@ const ProjectForm = () => {
       <Navbar />
       <div className="bg-gradient-to-r from-red-100 to-red-400 h-screen flex flex-col justify-center items-center">
         {/* Circular component for company logo */}
-        <div className="bg-white rounded-full h-20 w-80 flex items-center justify-center mb-8">
+        <div className="bg-gradient-to-r from-red-100 to-red-400 rounded-full h-20 w-80 flex items-center justify-center mb-8">
         <img
             src={logo}
             alt="Company Image"
@@ -109,7 +109,7 @@ const ProjectForm = () => {
 
         <form
           onSubmit={handleSubmit}
-          className="bg-crimson p-8 rounded-md max-w-xl w-full md:w-3/4 lg:w-1/2 xl:w-3/4"
+          className="bg-crimson p-8  rounded-md max-w-xl w-full md:w-3/4 lg:w-1/2 xl:w-3/4"
         >
           <div className="mb-4">
             <label

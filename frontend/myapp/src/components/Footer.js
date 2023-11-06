@@ -12,10 +12,12 @@ function Footer() {
             alt="Company Image"
             className="w-40 h-40 rounded-lg mb-4"
           />
-          <p>
+          
+          <p className="text-center">
             We are a leading company dedicated to providing high-quality
             services and products.
           </p>
+          
         </div>
 
         {/* Second Section: Company Address and Phone Number */}

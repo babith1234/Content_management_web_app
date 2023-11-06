@@ -59,7 +59,7 @@ const Profile = () => {
   };
 
   return (
-    <div className="">
+    <div className="relative">
       {isSmallScreen ? (
         <img
           className="mx-auto max-w-full h-auto"
@@ -77,16 +77,16 @@ const Profile = () => {
       )}
       <div
         className={`${
-          isSmallScreen ? "text-center h-2/5" : "text-left"
+          isSmallScreen ? "text-center h-2/6" : "text-left"
         } bg-gradient-to-r from-red-200 to-red-100 hover opacity-70 p-2 h-2/4 rounded-xl shadow-black shadow-lg max-w-md mx-auto transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-200 mt-20 ml-10 mr-5  absolute top-0 left-0 right-0 bottom-0 `}
       >
         {userData ? (
           <div className="flex flex-col items-start ">
-            <div className="w-48 h-48 overflow-hidden rounded-full mr-4 mt-5 ml-5">
+            <div className="w-48 h-32 overflow-hidden rounded-full mr-4 mt-5 ml-5">
               <img
                 src={userData.profile_pic}
                 alt="Profile"
-                className="object-cover w-full h-full"
+                className="object-cover"
               />
             </div>
             <div className="text-left">
