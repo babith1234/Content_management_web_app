@@ -37,7 +37,7 @@ const ContactPage = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "https://roltixsitenew-git-master-jsninad.vercel.app/contacts",
+        "https://web-app-s92f.onrender.com/contacts",
         formData,
         {
           headers: {
@@ -58,7 +58,7 @@ const ContactPage = () => {
   useEffect(() => {
     // Fetch contact form data from your API endpoint
     axios
-      .get("http://localhost:4000/contacts", {
+      .get("https://web-app-s92f.onrender.com/contacts", {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },

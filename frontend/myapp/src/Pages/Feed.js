@@ -168,7 +168,7 @@ const FeedsPage = () => {
 
   const getFeeds = async () => {
     try {
-      const response = await Axios.get("https://roltixsitenew-git-master-jsninad.vercel.app/feeds", {
+      const response = await Axios.get("https://web-app-s92f.onrender.com/feeds", {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -183,7 +183,7 @@ const FeedsPage = () => {
   const handleDelete = async (feedId) => {
     try {
       const response = await Axios.delete(
-        `https://roltixsitenew-git-master-jsninad.vercel.app/feeds?id=${feedId}`
+        `https://web-app-s92f.onrender.com/feeds?id=${feedId}`
       );
       const deletedFeed = response.data.deleted_feed;
       alert(" deleted successfully");

@@ -22,7 +22,7 @@ const ProjectForm = () => {
   const fetchData = async () => {
     try {
       const response1 = await axios.get(
-        `https://roltixsitenew-git-master-jsninad.vercel.app/projects?projectId=${projectId}`,
+        `https://web-app-s92f.onrender.com/projects?projectId=${projectId}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -64,7 +64,7 @@ const ProjectForm = () => {
 
       if (projectId) {
         const response = await axios.put(
-          `https://roltixsitenew-git-master-jsninad.vercel.app/projects?id=${projectId}`,
+          `https://web-app-s92f.onrender.com/projects?id=${projectId}`,
           formDataForSubmit
         );
 
@@ -72,7 +72,7 @@ const ProjectForm = () => {
         alert("Updated successfully");
         navigate("/projects");
       } else {
-        await axios.post("https://roltixsitenew-git-master-jsninad.vercel.app/projects", formDataForSubmit, {
+        await axios.post("https://web-app-s92f.onrender.com/projects", formDataForSubmit, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },

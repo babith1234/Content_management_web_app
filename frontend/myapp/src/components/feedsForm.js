@@ -21,7 +21,7 @@ const FeedForm = () => {
   const fetchData = async () => {
     try {
       const response1 = await axios.get(
-        `https://roltixsitenew-git-master-jsninad.vercel.app/feeds?feedId=${feedId}`,
+        `https://web-app-s92f.onrender.com/feeds?feedId=${feedId}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -59,7 +59,7 @@ const FeedForm = () => {
 
       if (feedId) {
         const response = await axios.put(
-          `https://roltixsitenew-git-master-jsninad.vercel.app/feeds?id=${feedId}`,
+          `https://web-app-s92f.onrender.com/feeds?id=${feedId}`,
           formDataForSubmit
         );
 
@@ -67,7 +67,7 @@ const FeedForm = () => {
         alert("Updated successfully");
         navigate("/feeds");
       } else {
-        await axios.post("https://roltixsitenew-git-master-jsninad.vercel.app/feeds", formDataForSubmit, {
+        await axios.post("https://web-app-s92f.onrender.com/feeds", formDataForSubmit, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },

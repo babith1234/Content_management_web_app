@@ -22,7 +22,7 @@ const UserForm = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get("https://roltixsitenew-git-master-jsninad.vercel.app/user", {
+      const response = await axios.get("https://web-app-s92f.onrender.com/user", {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -60,7 +60,7 @@ const UserForm = () => {
       formDataForSubmit.append("gender", formData.gender);
 
       const response = await axios.put(
-        `https://roltixsitenew-git-master-jsninad.vercel.app/users?id=${userId}`,
+        `https://web-app-s92f.onrender.com/users?id=${userId}`,
         formDataForSubmit
       );
 

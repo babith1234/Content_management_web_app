@@ -20,7 +20,7 @@ const LoginForm = () => {
     console.log(accessToken);
     try {
       const response = await axios.get(
-        "https://roltixsitenew-git-master-jsninad.vercel.app/user",
+        "https://web-app-s92f.onrender.com/user",
         {
           // You may need to include headers for authentication
           headers: {
@@ -55,7 +55,7 @@ const LoginForm = () => {
 
     try {
       const response = await axios.post(
-        "https://roltixsitenew-git-master-jsninad.vercel.app/login",
+        "https://web-app-s92f.onrender.com/login",
         newUser
       );
 

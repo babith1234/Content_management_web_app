@@ -24,7 +24,7 @@ const TestimonialForm = () => {
   const fetchData = async () => {
     try {
       const response1 = await axios.get(
-        `https://roltixsitenew-git-master-jsninad.vercel.app/testimonial?testimonialId=${testimonialId}`,
+        `https://web-app-s92f.onrender.com/testimonial?testimonialId=${testimonialId}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -65,7 +65,7 @@ const TestimonialForm = () => {
 
       if (testimonialId) {
         const response = await axios.put(
-          `https://roltixsitenew-git-master-jsninad.vercel.app/testimonial?id=${testimonialId}`,
+          `https://web-app-s92f.onrender.com/testimonial?id=${testimonialId}`,
           formDataForSubmit
         );
 
@@ -73,7 +73,7 @@ const TestimonialForm = () => {
         alert("Updated successfully");
         navigate("/testimonials");
       } else {
-        await axios.post("https://roltixsitenew-git-master-jsninad.vercel.app/testimonial", formDataForSubmit, {
+        await axios.post("https://web-app-s92f.onrender.com/testimonial", formDataForSubmit, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
