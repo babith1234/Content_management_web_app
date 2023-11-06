@@ -59,7 +59,7 @@ const Profile = () => {
   };
 
   return (
-    <div className="relative">
+    <div className="">
       {isSmallScreen ? (
         <img
           className="mx-auto max-w-full h-auto"
