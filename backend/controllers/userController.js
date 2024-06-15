@@ -1,11 +1,14 @@
 const userModel = require("../models/userModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const aws = require("aws-sdk");
-const multerConfig = require("../middleware/multer");
-const { generatePublicPresignedUrl } = require("../middleware/multer");
+// const aws = require("aws-sdk");
+// const multerConfig = require("../middleware/multer");
+// const { generatePublicPresignedUrl } = require("../middleware/multer");
 // Access the 's3' object
-const s3 = multerConfig.s3;
+// const s3 = multerConfig.s3;
+
+const { v2: cloudinary } = require("cloudinary");
+const fs = require("fs");
 
 //                         CREATE USER CONTROLLER
 // Controller function to create a new user and insert data into the user_collection
@@ -27,22 +30,23 @@ const createUser = async (req, res) => {
       return res.status(400).send({ status: false, msg: "no data provided" });
     }
 
-    // Check if the image has been successfully uploaded
-    if (!req.file) {
-      return res
-        .status(400)
-        .send({ status: false, msg: "No project image provided" });
+    const imageFile = req.file;
+
+    if (!imageFile) {
+      return res.status(401).json({
+        success: false,
+        message: "No image provided",
+      });
     }
 
-    // Generate a pre-signed URL for public access with a 12-hour expiration
-    const preSignedUrl = generatePublicPresignedUrl(req.file.key);
+    const imageResponse = await cloudinary.uploader.upload(imageFile.path, {
+      folder: "feedback_images",
+    });
 
-    // Check if the object has been successfully uploaded
-    if (!req.file) {
-      return res
-        .status(400)
-        .send({ status: false, msg: "No project image provided" });
-    }
+    // Delete the file from the uploads folder
+    fs.unlinkSync(imageFile.path);
+
+    const imageUrl = imageResponse.secure_url;
 
     const email_id = data.email_id;
 
@@ -60,7 +64,7 @@ const createUser = async (req, res) => {
     const newUser = await userModel.create({
       ...data,
       password: hashedPassword,
-      profile_pic: preSignedUrl,
+      profile_pic: imageUrl,
     });
 
     // Return a success response if data insertion is successful
@@ -79,6 +83,7 @@ const createUser = async (req, res) => {
       .json({ msg: "Internal server error", status: false });
   }
 };
+
 
 //                   LOGIN USER CONTROLLER
 const loginUser = async (req, res) => {
@@ -123,6 +128,7 @@ const loginUser = async (req, res) => {
       accessTokenPayload,
       process.env.JWT_SECRET_KEY
     );
+    
     const refreshToken = jwt.sign(
       refreshTokenPayload,
       process.env.JWT_REFRESH_KEY
@@ -307,6 +313,7 @@ const logoutController = (req, res) => {
       .json({ msg: "Internal Server Error", status: false });
   }
 };
+
 // Export the functions for use in other modules
 module.exports = {
   createUser,

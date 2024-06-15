@@ -6,7 +6,7 @@ const contactController = require("../controllers/conactController")
 const feedController = require("../controllers/feedController")
 const servicesController = require("../controllers/servicesController")
 const testimonialController = require("../controllers/testimonialController")
-const {upload} = require("../middleware/multer")
+const upload = require("../middleware/multer")
 const router=express.Router()
 
 // REGISTRATION, LOGIN, LOGOUT ROUTE
@@ -16,6 +16,8 @@ router.post("/login",userController.loginUser)
 router.post("/logout",userController.logoutController)
 router.get("/user",authenticateMiddleware,userController.getUser)
 router.get("/users",userController.getAllusers)
+
+
 
 
 // PROJECT CREATION, DISPLAY, DELETE, UPDATE ROUTE

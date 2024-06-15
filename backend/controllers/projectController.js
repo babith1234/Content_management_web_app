@@ -80,6 +80,7 @@ const createProject = async (req, res) => {
   try {
     let projectData = req.body;
 
+    
     const userId = req.user.user_id;
 
     if (Object.keys(projectData).length === 0) {
@@ -94,6 +95,8 @@ const createProject = async (req, res) => {
 
     // Generate a pre-signed URL for public access with a 12-hour expiration
     const preSignedUrl = generatePublicPresignedUrl(req.file.key);
+
+    console.log()
 
     let saveProject = await projectModel.create({
       ...projectData,
