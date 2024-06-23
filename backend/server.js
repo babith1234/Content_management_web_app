@@ -4,7 +4,6 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
 const cloudinary = require("cloudinary").v2;
-
 const routes = require("./routes/userRoute");
 
 dotenv.config();

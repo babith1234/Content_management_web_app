@@ -1,17 +1,15 @@
 const projectModel = require("../models/projectModel");
 const jwt = require("jsonwebtoken");
-const aws = require("aws-sdk");
-const multerConfig = require("../middleware/multer");
-const { generatePublicPresignedUrl } = require("../middleware/multer");
 
-// Access the 's3' object
-const s3 = multerConfig.s3;
 
-// authenticateMiddleware.js
+const { v2: cloudinary } = require("cloudinary");
+const fs = require("fs");
+
 
 const authenticateMiddleware = (req, res, next) => {
   try {
     const authorizationHeader = req.headers.authorization;
+    console.log(authorizationHeader)
 
     if (!authorizationHeader) {
       return res
@@ -80,28 +78,37 @@ const createProject = async (req, res) => {
   try {
     let projectData = req.body;
 
-    
     const userId = req.user.user_id;
 
     if (Object.keys(projectData).length === 0) {
       return res.status(400).send({ status: false, msg: "no data provided" });
     }
-    // Check if the image has been successfully uploaded
-    if (!req.file) {
-      return res
-        .status(400)
-        .send({ status: false, msg: "No project image provided" });
+
+    //get the image object
+    const imageFile = req.file;
+
+    if (!imageFile) {
+      return res.status(401).json({
+        success: false,
+        message: "No image provided",
+      });
     }
 
-    // Generate a pre-signed URL for public access with a 12-hour expiration
-    const preSignedUrl = generatePublicPresignedUrl(req.file.key);
+    //upload the image from the uploads floder to the cloudinary in to the folder feedback_images
+    const imageResponse = await cloudinary.uploader.upload(imageFile.path, {
+      folder: "feedback_images",
+    });
 
-    console.log()
+    // Delete the file from the uploads folder
+    fs.unlinkSync(imageFile.path);
+
+    //get the image url from cloudinary in the response
+    const imageUrl = imageResponse.secure_url;
 
     let saveProject = await projectModel.create({
       ...projectData,
       user: userId,
-      project_image: preSignedUrl,
+      project_image: imageUrl,
     });
     return res.status(201).send({
       status: true,
@@ -119,7 +126,6 @@ const createProject = async (req, res) => {
 const getProjects = async (req, res) => {
   try {
     
-
     const userId = req.user.user_id;
 
     const projectId = req.query.projectId;
@@ -168,59 +174,34 @@ const getProjects = async (req, res) => {
 
 const deleteProject = async (req, res) => {
   try {
-    // const projectId = req.params.project_id;
     const projectId = req.query.id;
 
-    // Check if the project exists and is associated with the user
-    const projectToDelete = await projectModel.findOne({
-      _id: projectId,
-    });
+    // Fetch the project from the database
+    const project = await projectModel.findById(projectId);
 
-    if (!projectToDelete) {
-      return res
-        .status(404)
-        .json({ status: false, msg: "Project not found for the user" });
+    if (!project) {
+      return res.status(404).send({ status: false, msg: "Project not found" });
     }
 
-    // Get the image key associated with the project
-    const imageKey = projectToDelete.project_image;
+    // Extract the public ID of the image from the URL
+    const imageUrl = project.project_image;
+    const imagePublicId = imageUrl.split('/').pop().split('.')[0];
 
-    // Deleting the project
+    // Delete the image from Cloudinary
+    await cloudinary.uploader.destroy(`feedback_images/${imagePublicId}`);
+
+    // Delete the project from the database
     await projectModel.findByIdAndDelete(projectId);
 
-    // Delete the image from the S3 bucket
-    await deleteImageFromS3(imageKey);
-
-    return res.status(200).json({
-      status: true,
-      msg: "Project and associated image deleted successfully",
-      deleted_project: projectToDelete,
-    });
+    return res.status(200).send({ status: true, msg: "Project deleted successfully" });
   } catch (error) {
-    console.error(error);
-    return res
-      .status(500)
-      .json({ msg: "Internal server error", status: false });
+    console.log(error);
+    return res.status(500).send({ msg: "Internal server error", status: false });
   }
 };
 
-// Function to delete an image from the S3 bucket
-const deleteImageFromS3 = (imageKey) => {
-  const params = {
-    Bucket: process.env.WASABI_BUCKET,
-    Key: imageKey,
-  };
 
-  return new Promise((resolve, reject) => {
-    s3.deleteObject(params, (err, data) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(data);
-      }
-    });
-  });
-};
+
 
 // UPDATE A PROJECT
 const updateProject = async (req, res) => {
@@ -229,6 +210,8 @@ const updateProject = async (req, res) => {
     const projectDataToUpdate = req.body;
     const newImageFile = req.file;
 
+    console.log(projectDataToUpdate)
+
     if (!project_id) {
       return res.status(400).json({
         status: false,
@@ -236,43 +219,39 @@ const updateProject = async (req, res) => {
       });
     }
 
+    // Retrieve the existing project from the database
+    const existingProject = await projectModel.findById(project_id);
+    if (!existingProject) {
+      return res.status(404).json({ status: false, msg: "Project not found" });
+    }
+
     // Check if a new image file has been provided
     if (newImageFile) {
-      // Retrieve the existing image key from the database
-      const existingProject = await projectModel.findById(project_id);
-      const existingImageKey = existingProject.project_image;
+      // Delete the old image from Cloudinary
+      const existingImagePublicId = existingProject.project_image.split('/').pop().split('.')[0];
+      await cloudinary.uploader.destroy(`feedback_images/${existingImagePublicId}`);
 
-      // Delete the old image from S3
-      await s3
-        .deleteObject({
-          Bucket: process.env.WASABI_BUCKET,
-          Key: existingImageKey,
-        })
-        .promise();
+      // Upload the new image to Cloudinary
+      const imageResponse = await cloudinary.uploader.upload(newImageFile.path, {
+        folder: "feedback_images",
+      });
 
-      // Generate a pre-signed URL for the new image
-      const newImageURL = generatePublicPresignedUrl(newImageFile.key);
+      // Delete the new image file from the uploads folder
+      fs.unlinkSync(newImageFile.path);
 
-      projectDataToUpdate.project_image = newImageURL;
+      // Update the image URL in the project data
+      projectDataToUpdate.project_image = imageResponse.secure_url;
     }
 
-    // Construct an update object with only provided fields
-    const updateObject = {};
-    for (const key in projectDataToUpdate) {
-      if (projectDataToUpdate[key] !== undefined) {
-        updateObject[key] = projectDataToUpdate[key];
-      }
-    }
+    // Construct an update object, keeping existing fields if not provided
+    const updateObject = { ...existingProject.toObject(), ...projectDataToUpdate };
 
+    // Update the project in the database
     const updatedProject = await projectModel.findByIdAndUpdate(
       project_id,
       updateObject,
       { new: true }
     );
-
-    if (!updatedProject) {
-      return res.status(404).json({ status: false, msg: "Project not found" });
-    }
 
     return res.status(200).json({
       status: true,
@@ -281,11 +260,10 @@ const updateProject = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    return res
-      .status(500)
-      .json({ status: false, msg: "Internal server error" });
+    return res.status(500).json({ status: false, msg: "Internal server error" });
   }
 };
+
 
 module.exports = {
   createProject,

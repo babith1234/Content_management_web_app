@@ -19,9 +19,8 @@ router.get("/users",userController.getAllusers)
 
 
 
-
 // PROJECT CREATION, DISPLAY, DELETE, UPDATE ROUTE
-router.post("/projects", authenticateMiddleware,upload.single('project_image'), projectController.createProject);
+router.post("/projects", authenticateMiddleware,upload.single('project_image'),projectController.createProject);
 router.get("/projects",authenticateMiddleware,projectController.getProjects)
 router.delete("/projects",projectController.deleteProject)
 router.put("/projects",upload.single('project_image'),projectController.updateProject)

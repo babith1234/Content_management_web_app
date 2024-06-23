@@ -1,11 +1,7 @@
 const userModel = require("../models/userModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-// const aws = require("aws-sdk");
-// const multerConfig = require("../middleware/multer");
-// const { generatePublicPresignedUrl } = require("../middleware/multer");
-// Access the 's3' object
-// const s3 = multerConfig.s3;
+
 
 const { v2: cloudinary } = require("cloudinary");
 const fs = require("fs");
@@ -30,6 +26,7 @@ const createUser = async (req, res) => {
       return res.status(400).send({ status: false, msg: "no data provided" });
     }
 
+    //get the image object
     const imageFile = req.file;
 
     if (!imageFile) {
@@ -39,6 +36,7 @@ const createUser = async (req, res) => {
       });
     }
 
+    //upload the image from the uploads floder to the cloudinary in to the folder feedback_images
     const imageResponse = await cloudinary.uploader.upload(imageFile.path, {
       folder: "feedback_images",
     });
@@ -46,6 +44,7 @@ const createUser = async (req, res) => {
     // Delete the file from the uploads folder
     fs.unlinkSync(imageFile.path);
 
+    //get the image url from cloudinary in the response
     const imageUrl = imageResponse.secure_url;
 
     const email_id = data.email_id;
@@ -117,6 +116,7 @@ const loginUser = async (req, res) => {
       user_id: userData.id,
       role: userData.role,
       exp: Math.floor(Date.now() / 1000) + 3600, // Set expiration time to 1 hour from now
+      // exp: Math.floor(Date.now() / 1000) + 86400 * 30,
     };
 
     const refreshTokenPayload = {
@@ -239,12 +239,7 @@ const updateUser = async (req, res) => {
       userData.profile_pic = newImageURL;
     }
 
-    // Filter out undefined values to avoid setting them to null in the update
-    // const filteredFields = Object.fromEntries(
-    //   Object.entries(updatedFields).filter(
-    //     ([key, value]) => value !== undefined
-    //   )
-    // );
+  
 
     // Construct an update object with only provided fields
     const updateObject = {};
@@ -254,12 +249,7 @@ const updateUser = async (req, res) => {
       }
     }
 
-    // Update the user document in the user_collection
-    // const updatedUser = await userModel.findByIdAndUpdate(
-    //   userId,
-    //   { $set: filteredFields },
-    //   { new: true } // Return the updated document
-    // );
+  
 
     const updatedUser = await userModel.findByIdAndUpdate(
       userId,
